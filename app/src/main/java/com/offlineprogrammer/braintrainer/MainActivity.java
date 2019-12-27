@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button goButton;
     ArrayList<Integer> answers = new ArrayList<Integer>();
-
+    private int locationOfCorrectAnswer;
 
 
     @Override
@@ -35,12 +35,12 @@ public class MainActivity extends AppCompatActivity {
         int a = rand.nextInt(21);
         int b = rand.nextInt(21);
 
-        int locationOfCorrectAnswer = rand.nextInt(4);
+        locationOfCorrectAnswer = rand.nextInt(4);
 
         sumTextView.setText(Integer.toString(a) + " + " + Integer.toString(b));
 
         for (int i=0; i<4;i++){
-            if(i==locationOfCorrectAnswer){
+            if(i== locationOfCorrectAnswer){
                 answers.add(a+b);
 
             } else {
@@ -67,6 +67,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void chooseAnswer(View view){
+        Log.i("Selected button","is " + view.getTag().toString());
+        int selectedButton = Integer.parseInt(view.getTag().toString());
+
+        if (selectedButton == locationOfCorrectAnswer){
+            Log.i("Winner", "button" + selectedButton);
+        }
 
     }
 }
