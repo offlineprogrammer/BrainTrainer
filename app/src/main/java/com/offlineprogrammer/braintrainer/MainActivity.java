@@ -9,15 +9,19 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
+    Button goButton;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        goButton = findViewById(R.id.goButton);
     }
 
     public void start(View view){
         Log.i("goButton Clicked","Hide");
-        Button goButton = findViewById(R.id.goButton);
-        goButton.setVisibility(View.VISIBLE);
+        goButton.setVisibility(View.INVISIBLE);
     }
 }
