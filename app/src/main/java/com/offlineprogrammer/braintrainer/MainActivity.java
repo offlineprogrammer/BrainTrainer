@@ -24,4 +24,8 @@ public class MainActivity extends AppCompatActivity {
         Log.i("goButton Clicked","Hide");
         goButton.setVisibility(View.INVISIBLE);
     }
+
+    public void chooseAnswer(View view){
+
+    }
 }
