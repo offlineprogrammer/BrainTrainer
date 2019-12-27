@@ -7,10 +7,12 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/goButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#8BC34A"
         android:onClick="start"
+        android:padding="40dp"
         android:text="GO!"
         android:textSize="60sp"
         app:layout_constraintBottom_toBottomOf="parent"
