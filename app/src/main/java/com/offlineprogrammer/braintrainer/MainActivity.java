@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     Button goButton;
     ArrayList<Integer> answers = new ArrayList<Integer>();
     private int locationOfCorrectAnswer;
+    TextView resultTextView;
 
 
     @Override
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         goButton = findViewById(R.id.goButton);
 
         TextView sumTextView = findViewById(R.id.sumTextView);
+        resultTextView = findViewById(R.id.resultTextView);
         Button button0 = findViewById(R.id.button0);
         Button button1 = findViewById(R.id.button1);
         Button button2 = findViewById(R.id.button2);
@@ -71,7 +73,12 @@ public class MainActivity extends AppCompatActivity {
         int selectedButton = Integer.parseInt(view.getTag().toString());
 
         if (selectedButton == locationOfCorrectAnswer){
+            resultTextView.setText("Correct!");
             Log.i("Winner", "button" + selectedButton);
+        } else {
+            resultTextView.setText("Wrong :(");
+            Log.i("Wrong :( ", "button" + selectedButton);
+
         }
 
     }
