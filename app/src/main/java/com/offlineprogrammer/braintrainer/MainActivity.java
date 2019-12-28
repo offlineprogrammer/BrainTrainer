@@ -1,6 +1,7 @@
 package com.offlineprogrammer.braintrainer;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     Button button3 ;
     private TextView sumTextView;
     TextView timerTextView;
+    Button playAgain;
+    ConstraintLayout gameLayout;
 
     public void newQuestion(){
 
@@ -70,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         goButton = findViewById(R.id.goButton);
 
+        goButton.setVisibility(View.VISIBLE);
+
         sumTextView = findViewById(R.id.sumTextView);
         resultTextView = findViewById(R.id.resultTextView);
         scoreTextView = findViewById(R.id.scoreTextView);
@@ -78,9 +83,31 @@ public class MainActivity extends AppCompatActivity {
          button2 = findViewById(R.id.button2);
          button3 = findViewById(R.id.button3);
          timerTextView = findViewById(R.id.timerTextView);
+         playAgain = findViewById(R.id.playAgainButton);
+         gameLayout=findViewById(R.id.gameLayout);
+
+         gameLayout.setVisibility(View.INVISIBLE);
 
         newQuestion();
+        playAgain(playAgain);
 
+
+
+    }
+
+    public void start(View view){
+        Log.i("goButton Clicked","Hide");
+        goButton.setVisibility(View.INVISIBLE);
+        gameLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void playAgain(View view){
+        score=0;
+        numberOfQuestions=0;
+        timerTextView.setText("30s");
+        scoreTextView.setText(Integer.toString(score) + "/" + Integer.toString(numberOfQuestions));
+        newQuestion();
+        playAgain.setVisibility(View.INVISIBLE);
         new CountDownTimer(30100,1000){
 
             @Override
@@ -93,15 +120,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 resultTextView.setText("Done!");
+                playAgain.setVisibility(View.VISIBLE);
+
 
             }
         }.start();
-
-    }
-
-    public void start(View view){
-        Log.i("goButton Clicked","Hide");
-        goButton.setVisibility(View.INVISIBLE);
     }
 
     public void chooseAnswer(View view){
@@ -118,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         numberOfQuestions++;
-        scoreTextView.setText(Integer.toString(score) + " / " + Integer.toString(numberOfQuestions));
+        scoreTextView.setText(Integer.toString(score) + "/" + Integer.toString(numberOfQuestions));
         newQuestion();
 
     }
