@@ -17,20 +17,16 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Integer> answers = new ArrayList<Integer>();
     private int locationOfCorrectAnswer;
     TextView resultTextView;
+    int score = 0;
+    int numberOfQuestions = 0;
+    TextView scoreTextView;
+    Button button0 ;
+    Button button1 ;
+    Button button2 ;
+    Button button3 ;
+    private TextView sumTextView;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        goButton = findViewById(R.id.goButton);
-
-        TextView sumTextView = findViewById(R.id.sumTextView);
-        resultTextView = findViewById(R.id.resultTextView);
-        Button button0 = findViewById(R.id.button0);
-        Button button1 = findViewById(R.id.button1);
-        Button button2 = findViewById(R.id.button2);
-        Button button3 = findViewById(R.id.button3);
+    public void newQuestion(){
 
         Random rand = new Random();
 
@@ -40,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         locationOfCorrectAnswer = rand.nextInt(4);
 
         sumTextView.setText(Integer.toString(a) + " + " + Integer.toString(b));
+
+        answers.clear();
 
         for (int i=0; i<4;i++){
             if(i== locationOfCorrectAnswer){
@@ -63,6 +61,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        goButton = findViewById(R.id.goButton);
+
+        sumTextView = findViewById(R.id.sumTextView);
+        resultTextView = findViewById(R.id.resultTextView);
+        scoreTextView = findViewById(R.id.scoreTextView);
+         button0 = findViewById(R.id.button0);
+         button1 = findViewById(R.id.button1);
+         button2 = findViewById(R.id.button2);
+         button3 = findViewById(R.id.button3);
+
+        newQuestion();
+
+    }
+
     public void start(View view){
         Log.i("goButton Clicked","Hide");
         goButton.setVisibility(View.INVISIBLE);
@@ -74,12 +91,16 @@ public class MainActivity extends AppCompatActivity {
 
         if (selectedButton == locationOfCorrectAnswer){
             resultTextView.setText("Correct!");
+            score++;
             Log.i("Winner", "button" + selectedButton);
         } else {
             resultTextView.setText("Wrong :(");
             Log.i("Wrong :( ", "button" + selectedButton);
 
         }
+        numberOfQuestions++;
+        scoreTextView.setText(Integer.toString(score) + " / " + Integer.toString(numberOfQuestions));
+        newQuestion();
 
     }
 }
