@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     TextView timerTextView;
     Button playAgain;
     ConstraintLayout gameLayout;
+    Boolean playIsActive = false;
 
     public void newQuestion(){
 
@@ -88,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
 
          gameLayout.setVisibility(View.INVISIBLE);
 
-        newQuestion();
-        playAgain(playAgain);
 
 
 
@@ -99,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
         Log.i("goButton Clicked","Hide");
         goButton.setVisibility(View.INVISIBLE);
         gameLayout.setVisibility(View.VISIBLE);
+        playIsActive = true;
+        newQuestion();
+        playAgain(playAgain);
+
     }
 
     public void playAgain(View view){
@@ -108,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         scoreTextView.setText(Integer.toString(score) + "/" + Integer.toString(numberOfQuestions));
         newQuestion();
         playAgain.setVisibility(View.INVISIBLE);
+        playIsActive = true;
         new CountDownTimer(30100,1000){
 
             @Override
@@ -121,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 resultTextView.setText("Done!");
                 playAgain.setVisibility(View.VISIBLE);
+                playIsActive=false;
 
 
             }
@@ -128,6 +133,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void chooseAnswer(View view){
+        if (playIsActive == false){
+            return;
+        }
         Log.i("Selected button","is " + view.getTag().toString());
         int selectedButton = Integer.parseInt(view.getTag().toString());
 
