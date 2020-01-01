@@ -143,6 +143,15 @@ public class MainActivity extends AppCompatActivity {
         gameLayout.setVisibility(View.INVISIBLE);
         configLayout.setVisibility(View.INVISIBLE);
         sOperation = view.getTag().toString();
+
+        if (sOperation.equals("?")) {
+            String[] list = {"+", "-", "*"};
+            Random rand = new Random();
+
+           sOperation =  list[rand.nextInt(list.length)];
+
+
+        }
         Log.i("chooseOperation: ", " is" +sOperation);
         start(goButton);
 
