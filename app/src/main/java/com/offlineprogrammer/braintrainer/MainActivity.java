@@ -35,6 +35,30 @@ public class MainActivity extends AppCompatActivity {
     private String sOperation;
     CountDownTimer countDownTimer = null;
 
+    public int doMath(int a, int b){
+
+        int result = 0;
+
+        if (sOperation.equals("+")) {
+            result = a+b;
+
+        } else if (sOperation.equals("-")) {
+            result = a-b;
+
+        } else if (sOperation.equals("*")) {
+            result = a*b;
+
+        } else  if (sOperation.equals("/")) {
+            result = a/b;
+
+        }
+
+
+
+        return result;
+
+    }
+
     public void newQuestion(){
 
         Random rand = new Random();
@@ -44,17 +68,17 @@ public class MainActivity extends AppCompatActivity {
 
         locationOfCorrectAnswer = rand.nextInt(4);
 
-        sumTextView.setText(Integer.toString(a) + " + " + Integer.toString(b));
+        sumTextView.setText(Integer.toString(a) + " " + sOperation + " " + Integer.toString(b));
 
         answers.clear();
 
         for (int i=0; i<4;i++){
             if(i== locationOfCorrectAnswer){
-                answers.add(a+b);
+                answers.add(doMath(a,b));
 
             } else {
                 int wrongAnswer = rand.nextInt(41);
-                while (wrongAnswer == a+b){
+                while (wrongAnswer == doMath(a,b)){
                     wrongAnswer = rand.nextInt(41);
                 }
                 answers.add(wrongAnswer);
@@ -118,6 +142,8 @@ public class MainActivity extends AppCompatActivity {
         goButton.setVisibility(View.VISIBLE);
         gameLayout.setVisibility(View.INVISIBLE);
         configLayout.setVisibility(View.INVISIBLE);
+        sOperation = view.getTag().toString();
+        Log.i("chooseOperation: ", " is" +sOperation);
         start(goButton);
 
     }
@@ -125,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void configureGame(View view){
         Log.i("configureButton Clicked","Hide");
+
         goButton.setVisibility(View.INVISIBLE);
         gameLayout.setVisibility(View.INVISIBLE);
         configLayout.setVisibility(View.VISIBLE);
