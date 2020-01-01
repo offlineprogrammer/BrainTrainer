@@ -30,7 +30,10 @@ public class MainActivity extends AppCompatActivity {
     TextView timerTextView;
     Button playAgain;
     ConstraintLayout gameLayout;
+    ConstraintLayout configLayout;
     Boolean playIsActive = false;
+    private String sOperation;
+    CountDownTimer countDownTimer = null;
 
     public void newQuestion(){
 
@@ -86,6 +89,12 @@ public class MainActivity extends AppCompatActivity {
          timerTextView = findViewById(R.id.timerTextView);
          playAgain = findViewById(R.id.playAgainButton);
          gameLayout=findViewById(R.id.gameLayout);
+        configLayout = findViewById(R.id.configLayout);
+
+
+        sOperation = "+";
+
+        configLayout.setVisibility(View.INVISIBLE);
 
          gameLayout.setVisibility(View.INVISIBLE);
 
@@ -104,6 +113,26 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void chooseOperation(View view){
+
+        goButton.setVisibility(View.VISIBLE);
+        gameLayout.setVisibility(View.INVISIBLE);
+        configLayout.setVisibility(View.INVISIBLE);
+        start(goButton);
+
+    }
+
+
+    public void configureGame(View view){
+        Log.i("configureButton Clicked","Hide");
+        goButton.setVisibility(View.INVISIBLE);
+        gameLayout.setVisibility(View.INVISIBLE);
+        configLayout.setVisibility(View.VISIBLE);
+
+
+    }
+
+
     public void playAgain(View view){
         score=0;
         numberOfQuestions=0;
@@ -112,7 +141,10 @@ public class MainActivity extends AppCompatActivity {
         newQuestion();
         playAgain.setVisibility(View.INVISIBLE);
         playIsActive = true;
-        new CountDownTimer(30100,1000){
+        if(countDownTimer  != null){
+            countDownTimer.cancel();
+        }
+        countDownTimer =  new CountDownTimer(30100,1000){
 
             @Override
             public void onTick(long millisUntilFinished) {
