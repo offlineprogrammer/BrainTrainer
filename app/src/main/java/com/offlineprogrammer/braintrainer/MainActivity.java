@@ -36,27 +36,41 @@ public class MainActivity extends AppCompatActivity {
     CountDownTimer countDownTimer = null;
 
     public int doMath(int a, int b){
-
         int result = 0;
-
         if (sOperation.equals("+")) {
             result = a+b;
-
         } else if (sOperation.equals("-")) {
             result = a-b;
-
         } else if (sOperation.equals("*")) {
             result = a*b;
-
         } else  if (sOperation.equals("/")) {
             result = a/b;
-
         }
-
-
-
         return result;
+    }
 
+    public int getRandom(int a, int b){
+        int result = 41;
+
+
+
+        Random rand = new Random();
+        if (sOperation.equals("+")) {
+            result =rand.nextInt(41);
+        } else if (sOperation.equals("-")) {
+            result =rand.nextInt(41 + 20) - 20;;
+        } else if (sOperation.equals("*")) {
+            if (a == 0) {
+                a = 1;
+            }
+            if (b == 0) {
+                b =1;
+            }
+            result =rand.nextInt(2*a*b);
+        } else  if (sOperation.equals("/")) {
+            result =rand.nextInt(41);
+        }
+        return result;
     }
 
     public void newQuestion(){
@@ -77,9 +91,9 @@ public class MainActivity extends AppCompatActivity {
                 answers.add(doMath(a,b));
 
             } else {
-                int wrongAnswer = rand.nextInt(41);
+                int wrongAnswer = getRandom(a,b);
                 while (wrongAnswer == doMath(a,b)){
-                    wrongAnswer = rand.nextInt(41);
+                    wrongAnswer = getRandom(a,b);;
                 }
                 answers.add(wrongAnswer);
 
