@@ -174,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
         numberOfQuestions=0;
         timerTextView.setText("30s");
         scoreTextView.setText(Integer.toString(score) + "/" + Integer.toString(numberOfQuestions));
+        resultTextView.setText("");
         newQuestion();
         playAgain.setVisibility(View.INVISIBLE);
         playIsActive = true;
