@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:Amazon="http://schemas.android.com/apk/lib/com.amazon.device.ads"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom|center_horizontal"
+        android:orientation="vertical">
+
+        <com.amazon.device.ads.AdLayout
+            android:id="@+id/ad_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView"
@@ -147,7 +161,7 @@
             android:id="@+id/playAgainButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="100dp"
             android:onClick="playAgain"
             android:text="Play Again"
             android:textSize="40sp"
@@ -292,8 +306,6 @@
                 android:layout_height="wrap_content"
                 android:background="#8BC34A"
                 android:onClick="chooseOperation"
-                android:tag="?"
-                android:text="?"
                 android:textSize="80sp"
                 app:layout_column="1"
                 app:layout_columnWeight="1"

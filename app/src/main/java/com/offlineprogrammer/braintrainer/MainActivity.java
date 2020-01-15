@@ -8,7 +8,14 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.amazon.device.ads.AdLayout;
+import com.amazon.device.ads.AdRegistration;
+import com.amazon.device.ads.AdSize;
+import com.amazon.device.ads.AdTargetingOptions;
+
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -34,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
     Boolean playIsActive = false;
     private String sOperation;
     CountDownTimer countDownTimer = null;
+
+    private AdLayout adView; // The ad view used to load and display the ad.
+    private static final String APP_KEY = "3967f616abb34b3c9f83c8d4c86eec34"; // Sample Application Key. Replace this value with your Application Key.
+    private static final String LOG_TAG = "SimpleAdSample"; // Tag used to prefix all log messages.
+
 
     public int doMath(int a, int b){
         int result = 0;
@@ -106,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         button2.setText(Integer.toString(answers.get(2)));
         button3.setText(Integer.toString(answers.get(3)));
 
+
     }
 
 
@@ -136,9 +149,36 @@ public class MainActivity extends AppCompatActivity {
 
          gameLayout.setVisibility(View.INVISIBLE);
 
+        AdRegistration.setAppKey("3967f616abb34b3c9f83c8d4c86eec34");
+
+        AdRegistration.enableLogging(true);
+        // For debugging purposes flag all ad requests as tests, but set to false for production builds.
+        AdRegistration.enableTesting(true);
+
+        this.adView = (AdLayout) findViewById(R.id.ad_view);
+
+
+        try {
+            AdRegistration.setAppKey(APP_KEY);
+            loadAd();
+        } catch (final IllegalArgumentException e) {
+            Log.e(LOG_TAG, "IllegalArgumentException thrown: " + e.toString());
+            return;
+        }
 
 
 
+
+
+
+
+
+
+
+    }
+
+    public void loadAd() {
+        this.adView.loadAd();
     }
 
     public void start(View view){
@@ -148,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
         playIsActive = true;
         newQuestion();
         playAgain(playAgain);
+
 
     }
 
@@ -190,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
         scoreTextView.setText(Integer.toString(score) + "/" + Integer.toString(numberOfQuestions));
         resultTextView.setText("");
         newQuestion();
+        loadAd();
         playAgain.setVisibility(View.INVISIBLE);
         playIsActive = true;
         if(countDownTimer  != null){
