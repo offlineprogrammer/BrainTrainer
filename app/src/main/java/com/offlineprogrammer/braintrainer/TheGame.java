@@ -2,7 +2,7 @@ package com.offlineprogrammer.braintrainer;
 
 import java.util.Random;
 
-public class GameHelper {
+public class TheGame {
 
     public static int doMath(int a, int b, String sOperation){
         int result = 0;

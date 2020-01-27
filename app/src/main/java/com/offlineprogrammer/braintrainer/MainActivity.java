@@ -32,10 +32,9 @@ import com.amazon.identity.auth.device.api.workflow.RequestContext;
 
 import java.util.ArrayList;
 import java.util.Random;
-import com.offlineprogrammer.braintrainer.GameHelper;
 
-import static com.offlineprogrammer.braintrainer.GameHelper.doMath;
-import static com.offlineprogrammer.braintrainer.GameHelper.getRandom;
+import static com.offlineprogrammer.braintrainer.TheGame.doMath;
+import static com.offlineprogrammer.braintrainer.TheGame.getRandom;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -264,13 +263,14 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.i("Info","Welcome MM");
 
-                textView.setText(String.format("Welcome, %s!\n", name));
-                login_with_amazon.setVisibility( View.INVISIBLE);
+
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         updateProfileData(name, email, account, zipCode);
+                        textView.setText(String.format("Welcome, %s!\n", name));
+                        login_with_amazon.setVisibility( View.INVISIBLE);
                     }
                 });
             }
