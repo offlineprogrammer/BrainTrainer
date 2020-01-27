@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         goButton = findViewById(R.id.goButton);
-        requestContext = RequestContext.create(this);
+
         goButton.setVisibility(View.VISIBLE);
         sumTextView = findViewById(R.id.sumTextView);
         resultTextView = findViewById(R.id.resultTextView);
@@ -125,6 +125,23 @@ public class MainActivity extends AppCompatActivity {
         configLayout.setVisibility(View.INVISIBLE);
         gameLayout.setVisibility(View.INVISIBLE);
 
+
+
+        mLogInProgress = findViewById(R.id.log_in_progress);
+
+        setupAds();
+        setupAuthorization();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        requestContext.onResume();
+    }
+
+    private void setupAds() {
+
         AdRegistration.setAppKey("3967f616abb34b3c9f83c8d4c86eec34");
         AdRegistration.enableLogging(true);
         // For debugging purposes flag all ad requests as tests, but set to false for production builds.
@@ -138,8 +155,13 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        mLogInProgress = findViewById(R.id.log_in_progress);
+    }
+
+    private void setupAuthorization() {
+        requestContext = RequestContext.create(this);
+
         requestContext.registerListener(new AuthorizeListener() {
+            /* Authorization was completed successfully. */
             @Override
             public void onSuccess(AuthorizeResult authorizeResult) {
                 runOnUiThread(new Runnable() {
@@ -152,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 fetchUserProfile();
             }
 
+            /* There was an error during the attempt to authorize the application */
             @Override
             public void onError(AuthError authError) {
                 Log.e(TAG, "AuthError during authorization", authError);
@@ -163,9 +186,9 @@ public class MainActivity extends AppCompatActivity {
                         setLoggingInState(false);
                     }
                 });
-
             }
 
+            /* Authorization was cancelled before it could be completed. */
             @Override
             public void onCancel(AuthCancellation authCancellation) {
                 Log.e(TAG, "User cancelled authorization");
@@ -176,15 +199,8 @@ public class MainActivity extends AppCompatActivity {
                         resetProfileView();
                     }
                 });
-
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        requestContext.onResume();
     }
 
     public void loadAd() {
@@ -204,6 +220,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void login(View view){
         Log.i("loginButton Clicked","Start LWA");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // At this point we know the authorization completed, so remove the ability to return to the app to sign-in again
+                setLoggingInState(true);
+            }
+        });
         AuthorizationManager.authorize(new AuthorizeRequest
                 .Builder(requestContext)
                 .addScopes(ProfileScope.profile(), ProfileScope.postalCode())
@@ -347,7 +370,9 @@ public class MainActivity extends AppCompatActivity {
         if (loggingIn) {
            // mLoginButton.setVisibility(Button.GONE);
             setLoggedInButtonsVisibility(Button.GONE);
-            mLogInProgress.setVisibility(ProgressBar.VISIBLE);
+            Log.d(TAG, "Showing the progress bar");
+            mLogInProgress.setVisibility(View.VISIBLE);
+            goButton.setVisibility(View.GONE);
            // mProfileText.setVisibility(TextView.GONE);
         } else {
             if (mIsLoggedIn) {
@@ -356,6 +381,7 @@ public class MainActivity extends AppCompatActivity {
                // mLoginButton.setVisibility(Button.VISIBLE);
             }
             mLogInProgress.setVisibility(ProgressBar.GONE);
+            goButton.setVisibility(View.VISIBLE);
            // mProfileText.setVisibility(TextView.VISIBLE);
         }
     }
