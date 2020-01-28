@@ -8,6 +8,22 @@
     tools:context=".MainActivity">
 
 
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:clickable="true"
+        android:onClick="logout"
+        android:paddingBottom="10dp"
+        android:text="@string/logout"
+        android:textColor="@color/logout_text_color_state"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
 
         android:layout_width="wrap_content"
@@ -80,12 +96,12 @@
         android:layout_marginBottom="100dp"
         android:background="@android:color/transparent"
         android:onClick="login"
+        android:src="@color/login_button_image_state"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        android:src="@color/login_button_image_state" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/configButton"

@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     ConstraintLayout configLayout;
     CountDownTimer countDownTimer = null;
     ImageButton login_with_amazon;
+    Button mLogoutButton;
     TextView textView;
     private boolean mIsLoggedIn;
     private TheGame myGame;
@@ -113,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         login_with_amazon = findViewById(R.id.login_with_amazon);
         textView = findViewById(R.id.textView);
         mLogInProgress = findViewById(R.id.log_in_progress);
+        mLogoutButton = findViewById(R.id.logout);
 
         goButton.setVisibility(View.VISIBLE);
         configLayout.setVisibility(View.INVISIBLE);
@@ -205,6 +207,26 @@ public class MainActivity extends AppCompatActivity {
         playAgain(playAgain);
 
 
+    }
+
+    public void logout(View view){
+        Log.i("logout Clicked","Start LWA");
+        AuthorizationManager.signOut(getApplicationContext(), new Listener<Void, AuthError>() {
+            @Override
+            public void onSuccess(Void response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setLoggedOutState();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(AuthError authError) {
+                Log.e(TAG, "Error clearing authorization state.", authError);
+            }
+        });
     }
 
     public void login(View view){
@@ -347,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
      * @param visibility the visibility to which the buttons should be set
      */
     private void setLoggedInButtonsVisibility(int visibility) {
-       // mLogoutButton.setVisibility(visibility);
+        mLogoutButton.setVisibility(visibility);
     }
 
     /**
@@ -367,7 +389,7 @@ public class MainActivity extends AppCompatActivity {
             if (mIsLoggedIn) {
                 setLoggedInButtonsVisibility(Button.VISIBLE);
             } else {
-               // mLoginButton.setVisibility(Button.VISIBLE);
+                login_with_amazon.setVisibility(Button.VISIBLE);
             }
             mLogInProgress.setVisibility(ProgressBar.GONE);
             goButton.setVisibility(View.VISIBLE);
