@@ -89,9 +89,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        goButton = findViewById(R.id.goButton);
 
-        goButton.setVisibility(View.VISIBLE);
+        setupUi();
+        setupGame();
+        setupAds();
+        setupAuthorization();
+
+    }
+
+    private void setupUi() {
+        goButton = findViewById(R.id.goButton);
         sumTextView = findViewById(R.id.sumTextView);
         resultTextView = findViewById(R.id.resultTextView);
         scoreTextView = findViewById(R.id.scoreTextView);
@@ -105,14 +112,11 @@ public class MainActivity extends AppCompatActivity {
         configLayout = findViewById(R.id.configLayout);
         login_with_amazon = findViewById(R.id.login_with_amazon);
         textView = findViewById(R.id.textView);
-        configLayout.setVisibility(View.INVISIBLE);
-        gameLayout.setVisibility(View.INVISIBLE);
         mLogInProgress = findViewById(R.id.log_in_progress);
 
-        setupGame();
-        setupAds();
-        setupAuthorization();
-
+        goButton.setVisibility(View.VISIBLE);
+        configLayout.setVisibility(View.INVISIBLE);
+        gameLayout.setVisibility(View.INVISIBLE);
     }
 
     private void setupGame(){

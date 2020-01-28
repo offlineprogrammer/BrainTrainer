@@ -9,7 +9,7 @@
 
 
     <LinearLayout
-        style="@style/Widget.AppCompat.Button"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -78,13 +78,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"
+        android:background="@android:color/transparent"
         android:onClick="login"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/btnlwa_gold_login" />
+        android:src="@color/login_button_image_state" />
 
     <ImageButton
         android:id="@+id/configButton"
