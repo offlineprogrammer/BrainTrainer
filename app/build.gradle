@@ -30,4 +30,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:15.0.1'
     implementation 'com.amazon.android:mobile-ads:5.+'
     implementation files('login-with-amazon-sdk.jar')
+    implementation 'org.jetbrains:annotations-java5:15.0'
 }

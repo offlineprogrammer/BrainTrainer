@@ -4,31 +4,45 @@ import java.util.Random;
 
 public class TheGame {
 
-    public static int doMath(int a, int b, String sOperation){
+    private String mOperation;
+    private boolean isActive = false;
+
+    public TheGame(String sOperation) {
+        mOperation=sOperation;
+    }
+
+    public  int doMath(int a, int b){
         int result = 0;
-        if (sOperation.equals("+")) {
+        if (mOperation.equals("+")) {
             result = a+b;
-        } else if (sOperation.equals("-")) {
+        } else if (mOperation.equals("-")) {
             result = a-b;
-        } else if (sOperation.equals("*")) {
+        } else if (mOperation.equals("*")) {
             result = a*b;
-        } else  if (sOperation.equals("/")) {
+        } else  if (mOperation.equals("/")) {
             result = a/b;
         }
         return result;
     }
 
-    public static int getRandom(int a, int b, String sOperation){
+
+
+
+
+
+
+
+    public  int getRandom(int a, int b){
         int result = 41;
 
 
 
         Random rand = new Random();
-        if (sOperation.equals("+")) {
+        if (mOperation.equals("+")) {
             result =rand.nextInt(41);
-        } else if (sOperation.equals("-")) {
+        } else if (mOperation.equals("-")) {
             result =rand.nextInt(41 + 20) - 20;;
-        } else if (sOperation.equals("*")) {
+        } else if (mOperation.equals("*")) {
             if (a == 0) {
                 a = 1;
             }
@@ -36,9 +50,26 @@ public class TheGame {
                 b =1;
             }
             result =rand.nextInt(2*a*b);
-        } else  if (sOperation.equals("/")) {
+        } else  if (mOperation.equals("/")) {
             result =rand.nextInt(41);
         }
         return result;
+    }
+
+
+    public String getOperation() {
+        return mOperation;
+    }
+
+    public void setOperation(String mOperation) {
+        this.mOperation = mOperation;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

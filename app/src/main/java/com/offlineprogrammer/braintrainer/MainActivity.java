@@ -33,8 +33,8 @@ import com.amazon.identity.auth.device.api.workflow.RequestContext;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static com.offlineprogrammer.braintrainer.TheGame.doMath;
-import static com.offlineprogrammer.braintrainer.TheGame.getRandom;
+
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,12 +56,11 @@ public class MainActivity extends AppCompatActivity {
     Button playAgain;
     ConstraintLayout gameLayout;
     ConstraintLayout configLayout;
-    Boolean playIsActive = false;
-    private String sOperation;
     CountDownTimer countDownTimer = null;
     ImageButton login_with_amazon;
     TextView textView;
     private boolean mIsLoggedIn;
+    private TheGame myGame;
 
     private AdLayout adView; // The ad view used to load and display the ad.
     private static final String APP_KEY = "3967f616abb34b3c9f83c8d4c86eec34"; // Sample Application Key. Replace this value with your Application Key.
@@ -80,15 +79,15 @@ public class MainActivity extends AppCompatActivity {
         int a = rand.nextInt(21);
         int b = rand.nextInt(21);
         locationOfCorrectAnswer = rand.nextInt(4);
-        sumTextView.setText(String.format("%s %s %s", Integer.toString(a), sOperation, Integer.toString(b)));
+        sumTextView.setText(String.format("%s %s %s", Integer.toString(a), myGame.getOperation() , Integer.toString(b)));
         answers.clear();
         for (int i=0; i<4;i++){
             if(i== locationOfCorrectAnswer){
-                answers.add( doMath(a,b,sOperation));
+                answers.add( myGame.doMath(a,b));
             } else {
-                int wrongAnswer = getRandom(a,b,sOperation);
-                while (wrongAnswer == doMath(a,b,sOperation)){
-                    wrongAnswer = getRandom(a,b,sOperation);;
+                int wrongAnswer = myGame.getRandom(a,b);
+                while (wrongAnswer == myGame.doMath(a,b)){
+                    wrongAnswer = myGame.getRandom(a,b);;
                 }
                 answers.add(wrongAnswer);
             }
@@ -121,17 +120,18 @@ public class MainActivity extends AppCompatActivity {
         configLayout = findViewById(R.id.configLayout);
         login_with_amazon = findViewById(R.id.login_with_amazon);
         textView = findViewById(R.id.textView);
-        sOperation = "+";
         configLayout.setVisibility(View.INVISIBLE);
         gameLayout.setVisibility(View.INVISIBLE);
-
-
-
         mLogInProgress = findViewById(R.id.log_in_progress);
 
+        setupGame();
         setupAds();
         setupAuthorization();
 
+    }
+
+    private void setupGame(){
+        myGame = new TheGame("+");
     }
 
     @Override
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i("goButton Clicked","Hide");
         goButton.setVisibility(View.INVISIBLE);
         gameLayout.setVisibility(View.VISIBLE);
-        playIsActive = true;
+        myGame.setActive(true);
         newQuestion();
         playAgain(playAgain);
 
@@ -394,17 +394,18 @@ public class MainActivity extends AppCompatActivity {
         goButton.setVisibility(View.VISIBLE);
         gameLayout.setVisibility(View.INVISIBLE);
         configLayout.setVisibility(View.INVISIBLE);
-        sOperation = view.getTag().toString();
 
-        if (sOperation.equals("?")) {
+        myGame.setOperation(view.getTag().toString());
+
+        if ( myGame.getOperation().equals("?")) {
             String[] list = {"+", "-", "*"};
             Random rand = new Random();
 
-           sOperation =  list[rand.nextInt(list.length)];
+           myGame.setOperation(list[rand.nextInt(list.length)]);
 
 
         }
-        Log.i("chooseOperation: ", " is" +sOperation);
+        Log.i("chooseOperation: ", " is" +myGame.getOperation());
         start(goButton);
 
     }
@@ -430,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
         newQuestion();
         loadAd();
         playAgain.setVisibility(View.INVISIBLE);
-        playIsActive = true;
+        myGame.setActive(true);
         if(countDownTimer  != null){
             countDownTimer.cancel();
         }
@@ -447,7 +448,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 resultTextView.setText("Done!");
                 playAgain.setVisibility(View.VISIBLE);
-                playIsActive=false;
+                myGame.setActive(false);
 
 
             }
@@ -455,7 +456,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void chooseAnswer(View view){
-        if (playIsActive == false){
+        if (!myGame.isActive()){
             return;
         }
         Log.i("Selected button","is " + view.getTag().toString());

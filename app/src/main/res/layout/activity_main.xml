@@ -9,6 +9,7 @@
 
 
     <LinearLayout
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -20,7 +21,7 @@
 
         <ProgressBar
             android:id="@+id/log_in_progress"
-            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Inverse"
+            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large.Inverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
