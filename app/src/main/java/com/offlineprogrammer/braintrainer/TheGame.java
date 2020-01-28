@@ -1,11 +1,16 @@
 package com.offlineprogrammer.braintrainer;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class TheGame {
 
     private String mOperation;
     private boolean isActive = false;
+    public int locationOfCorrectAnswer;
+    public  int a;
+    public  int b;
+    ArrayList<Integer> answers = new ArrayList<Integer>();
 
     public TheGame(String sOperation) {
         mOperation=sOperation;
@@ -23,6 +28,28 @@ public class TheGame {
             result = a/b;
         }
         return result;
+    }
+
+
+    public ArrayList<Integer> setupGame(){
+        Random rand = new Random();
+        a = rand.nextInt(21);
+        b = rand.nextInt(21);
+        locationOfCorrectAnswer = rand.nextInt(4);
+       // sumTextView.setText(String.format("%s %s %s", Integer.toString(a), myGame.getOperation() , Integer.toString(b)));
+        answers.clear();
+        for (int i=0; i<4;i++){
+            if(i== locationOfCorrectAnswer){
+                answers.add(doMath(a,b));
+            } else {
+                int wrongAnswer = getRandom(a,b);
+                while (wrongAnswer == doMath(a,b)){
+                    wrongAnswer = getRandom(a,b);;
+                }
+                answers.add(wrongAnswer);
+            }
+        }
+        return answers ;
     }
 
 

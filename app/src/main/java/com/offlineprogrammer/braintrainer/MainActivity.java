@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getName();
 
     Button goButton;
-    ArrayList<Integer> answers = new ArrayList<Integer>();
-    private int locationOfCorrectAnswer;
+
+
     TextView resultTextView;
     int score = 0;
     int numberOfQuestions = 0;
@@ -75,24 +75,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void newQuestion(){
-        Random rand = new Random();
-        int a = rand.nextInt(21);
-        int b = rand.nextInt(21);
-        locationOfCorrectAnswer = rand.nextInt(4);
-        sumTextView.setText(String.format("%s %s %s", Integer.toString(a), myGame.getOperation() , Integer.toString(b)));
-        answers.clear();
-        for (int i=0; i<4;i++){
-            if(i== locationOfCorrectAnswer){
-                answers.add( myGame.doMath(a,b));
-            } else {
-                int wrongAnswer = myGame.getRandom(a,b);
-                while (wrongAnswer == myGame.doMath(a,b)){
-                    wrongAnswer = myGame.getRandom(a,b);;
-                }
-                answers.add(wrongAnswer);
-            }
-        }
-
+        ArrayList<Integer> answers ;
+        answers = myGame.setupGame();
+        sumTextView.setText(String.format("%s %s %s", Integer.toString(myGame.a), myGame.getOperation() , Integer.toString(myGame.b)));
         button0.setText(Integer.toString(answers.get(0)));
         button1.setText(Integer.toString(answers.get(1)));
         button2.setText(Integer.toString(answers.get(2)));
@@ -462,7 +447,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i("Selected button","is " + view.getTag().toString());
         int selectedButton = Integer.parseInt(view.getTag().toString());
 
-        if (selectedButton == locationOfCorrectAnswer){
+        if (selectedButton == myGame.locationOfCorrectAnswer){
             resultTextView.setText("Correct!");
             score++;
             Log.i("Winner", "button" + selectedButton);
