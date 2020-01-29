@@ -218,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         setLoggedOutState();
+                        start(goButton);
                     }
                 });
             }
