@@ -8,21 +8,7 @@
     tools:context=".MainActivity">
 
 
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:clickable="true"
-        android:onClick="logout"
-        android:paddingBottom="10dp"
-        android:text="@string/logout"
-        android:textColor="@color/logout_text_color_state"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
 
     <LinearLayout
 
@@ -360,37 +346,48 @@
     <LinearLayout
         android:id="@+id/homeOpsLayout"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="300dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="350dp"
         android:layout_marginBottom="20dp"
         android:gravity="fill_horizontal"
-        android:orientation="horizontal"
-        android:weightSum="2"
+        android:orientation="vertical"
+        android:weightSum="3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/configButton"
-            android:layout_width="0dp"
-            android:layout_height="75dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="center"
             android:onClick="configureGame"
-            android:padding="10dp"
+
             android:src="@drawable/button3" />
 
         <ImageButton
             android:id="@+id/login_with_amazon"
-            android:layout_width="0dp"
-            android:layout_height="75dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="center"
             android:onClick="login"
-            android:padding="10dp"
-            android:src="@color/login_button_image_state"
-            android:visibility="visible" />
+
+            android:src="@color/login_button_image_state" />
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:onClick="logout"
+            android:text="@string/logout"
+            android:textColor="@color/logout_text_color_state"
+             />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

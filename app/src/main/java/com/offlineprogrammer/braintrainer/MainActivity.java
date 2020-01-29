@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     ConstraintLayout gameLayout;
     ConstraintLayout configLayout;
     ConstraintLayout homeLayout;
+    LinearLayout mhomeOpsLayout;
     CountDownTimer countDownTimer = null;
     ImageButton login_with_amazon;
     Button mLogoutButton;
@@ -117,9 +119,11 @@ public class MainActivity extends AppCompatActivity {
         mLogInProgress = findViewById(R.id.log_in_progress);
         mLogoutButton = findViewById(R.id.logout);
         homeLayout = findViewById(R.id.homeLayout);
+        mhomeOpsLayout = findViewById(R.id.homeOpsLayout);
 
-       // goButton.setVisibility(View.VISIBLE);
+
         homeLayout.setVisibility(View.VISIBLE);
+        setHomeOpsVisibility(View.VISIBLE);
         configLayout.setVisibility(View.INVISIBLE);
         gameLayout.setVisibility(View.INVISIBLE);
     }
@@ -348,6 +352,12 @@ public class MainActivity extends AppCompatActivity {
         textView.setText("Click to login");
     }
 
+
+    private void setHomeOpsVisibility(int visibility){
+        mhomeOpsLayout.setVisibility(visibility);
+
+    }
+
     /**
      * Sets the state of the application to reflect that the user is currently authorized.
      */
@@ -434,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i("configureButton Clicked","Hide");
 
         homeLayout.setVisibility(View.INVISIBLE);
-        //goButton.setVisibility(View.INVISIBLE);
+        setHomeOpsVisibility(View.INVISIBLE);
         gameLayout.setVisibility(View.INVISIBLE);
         configLayout.setVisibility(View.VISIBLE);
 
