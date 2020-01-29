@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     Button playAgain;
     ConstraintLayout gameLayout;
     ConstraintLayout configLayout;
+    ConstraintLayout homeLayout;
     CountDownTimer countDownTimer = null;
     ImageButton login_with_amazon;
     Button mLogoutButton;
@@ -115,8 +116,10 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.textView);
         mLogInProgress = findViewById(R.id.log_in_progress);
         mLogoutButton = findViewById(R.id.logout);
+        homeLayout = findViewById(R.id.homeLayout);
 
-        goButton.setVisibility(View.VISIBLE);
+       // goButton.setVisibility(View.VISIBLE);
+        homeLayout.setVisibility(View.VISIBLE);
         configLayout.setVisibility(View.INVISIBLE);
         gameLayout.setVisibility(View.INVISIBLE);
     }
@@ -200,7 +203,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void start(View view){
         Log.i("goButton Clicked","Hide");
-        goButton.setVisibility(View.INVISIBLE);
+        //goButton.setVisibility(View.INVISIBLE);
+        homeLayout.setVisibility(View.INVISIBLE);
         gameLayout.setVisibility(View.VISIBLE);
         myGame.setActive(true);
         newQuestion();
@@ -384,7 +388,8 @@ public class MainActivity extends AppCompatActivity {
             setLoggedInButtonsVisibility(Button.GONE);
             Log.d(TAG, "Showing the progress bar");
             mLogInProgress.setVisibility(View.VISIBLE);
-            goButton.setVisibility(View.GONE);
+            homeLayout.setVisibility(View.GONE);
+            //goButton.setVisibility(View.GONE);
            // mProfileText.setVisibility(TextView.GONE);
         } else {
             if (mIsLoggedIn) {
@@ -393,7 +398,8 @@ public class MainActivity extends AppCompatActivity {
                 login_with_amazon.setVisibility(Button.VISIBLE);
             }
             mLogInProgress.setVisibility(ProgressBar.GONE);
-            goButton.setVisibility(View.VISIBLE);
+            homeLayout.setVisibility(View.VISIBLE);
+            //goButton.setVisibility(View.VISIBLE);
            // mProfileText.setVisibility(TextView.VISIBLE);
         }
     }
@@ -403,7 +409,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void chooseOperation(View view){
 
-        goButton.setVisibility(View.VISIBLE);
+        homeLayout.setVisibility(View.VISIBLE);
+        //goButton.setVisibility(View.VISIBLE);
         gameLayout.setVisibility(View.INVISIBLE);
         configLayout.setVisibility(View.INVISIBLE);
 
@@ -426,7 +433,8 @@ public class MainActivity extends AppCompatActivity {
     public void configureGame(View view){
         Log.i("configureButton Clicked","Hide");
 
-        goButton.setVisibility(View.INVISIBLE);
+        homeLayout.setVisibility(View.INVISIBLE);
+        //goButton.setVisibility(View.INVISIBLE);
         gameLayout.setVisibility(View.INVISIBLE);
         configLayout.setVisibility(View.VISIBLE);
 
