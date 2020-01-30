@@ -226,7 +226,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         setLoggedOutState();
-                        start(goButton);
+                        homeLayout.setVisibility(View.VISIBLE);
+                        setHomeOpsVisibility(View.VISIBLE);
+                        configLayout.setVisibility(View.INVISIBLE);
+                        gameLayout.setVisibility(View.INVISIBLE);
+                        myGame.setActive(false);
                     }
                 });
             }
@@ -314,6 +318,11 @@ public class MainActivity extends AppCompatActivity {
                         updateProfileData(name, email, account, zipCode);
                         textView.setText(String.format("Welcome, %s!\n", name));
                         login_with_amazon.setVisibility( View.INVISIBLE);
+                        homeLayout.setVisibility(View.VISIBLE);
+                        setHomeOpsVisibility(View.VISIBLE);
+                        configLayout.setVisibility(View.INVISIBLE);
+                        gameLayout.setVisibility(View.INVISIBLE);
+                        myGame.setActive(false);
                     }
                 });
             }
@@ -349,12 +358,18 @@ public class MainActivity extends AppCompatActivity {
     private void resetProfileView() {
         setLoggingInState(false);
         //mProfileText.setText(getString(R.string.default_message));
-        textView.setText("Click to login");
+        textView.setText("Test your math speed");
     }
 
 
     private void setHomeOpsVisibility(int visibility){
         mhomeOpsLayout.setVisibility(visibility);
+        if (mIsLoggedIn) {
+            setLoggedInButtonsVisibility(Button.VISIBLE);
+        } else {
+            login_with_amazon.setVisibility(Button.VISIBLE);
+            setLoggedInButtonsVisibility(Button.GONE);
+        }
 
     }
 
@@ -363,9 +378,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setLoggedInState() {
        // mLoginButton.setVisibility(Button.GONE);
-        setLoggedInButtonsVisibility(Button.VISIBLE);
         mIsLoggedIn = true;
         setLoggingInState(false);
+        setLoggedInButtonsVisibility(Button.VISIBLE);
     }
 
     /**
@@ -395,6 +410,7 @@ public class MainActivity extends AppCompatActivity {
     private void setLoggingInState(final boolean loggingIn) {
         if (loggingIn) {
            // mLoginButton.setVisibility(Button.GONE);
+            setHomeOpsVisibility(View.GONE);
             setLoggedInButtonsVisibility(Button.GONE);
             Log.d(TAG, "Showing the progress bar");
             mLogInProgress.setVisibility(View.VISIBLE);
@@ -402,6 +418,7 @@ public class MainActivity extends AppCompatActivity {
             //goButton.setVisibility(View.GONE);
            // mProfileText.setVisibility(TextView.GONE);
         } else {
+            setHomeOpsVisibility(View.VISIBLE);
             if (mIsLoggedIn) {
                 setLoggedInButtonsVisibility(Button.VISIBLE);
             } else {
@@ -420,9 +437,9 @@ public class MainActivity extends AppCompatActivity {
     public void chooseOperation(View view){
 
         homeLayout.setVisibility(View.VISIBLE);
-        //goButton.setVisibility(View.VISIBLE);
         gameLayout.setVisibility(View.INVISIBLE);
         configLayout.setVisibility(View.INVISIBLE);
+        setHomeOpsVisibility(View.VISIBLE);
 
         myGame.setOperation(view.getTag().toString());
 
