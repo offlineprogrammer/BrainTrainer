@@ -201,6 +201,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void register(){
+
+    }
+
     public void loadAd() {
         this.adView.loadAd();
     }
