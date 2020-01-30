@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.amazon.device.ads.AdLayout;
 import com.amazon.device.ads.AdRegistration;
+import com.amazon.device.messaging.ADM;
 import com.amazon.identity.auth.device.AuthError;
 import com.amazon.identity.auth.device.api.Listener;
 import com.amazon.identity.auth.device.api.authorization.AuthCancellation;
@@ -29,6 +30,7 @@ import com.amazon.identity.auth.device.api.authorization.ProfileScope;
 import com.amazon.identity.auth.device.api.authorization.Scope;
 import com.amazon.identity.auth.device.api.authorization.User;
 import com.amazon.identity.auth.device.api.workflow.RequestContext;
+
 
 
 import java.util.ArrayList;
@@ -98,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         setupGame();
         setupAds();
         setupAuthorization();
+        register();
 
     }
 
@@ -202,6 +205,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void register(){
+
+        final ADM adm = new ADM(this);
+        if (adm.isSupported())
+        {
+            if(adm.getRegistrationId()==null){
+                adm.startRegister();
+            }else {
+
+            }
+        }
+
 
     }
 
