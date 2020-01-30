@@ -400,6 +400,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setLoggedInButtonsVisibility(int visibility) {
         mLogoutButton.setVisibility(visibility);
+
     }
 
     /**
