@@ -314,12 +314,11 @@
 
         <Button
             android:id="@+id/goButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#8BC34A"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@drawable/play"
             android:onClick="start"
             android:padding="40dp"
-            android:text="GO!"
             android:textSize="60sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -347,7 +346,7 @@
         android:id="@+id/homeOpsLayout"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="400dp"
         android:layout_marginBottom="20dp"
         android:gravity="fill_horizontal"
         android:orientation="vertical"
@@ -385,8 +384,7 @@
             android:clickable="true"
             android:onClick="logout"
             android:text="@string/logout"
-            android:textColor="@color/logout_text_color_state"
-             />
+            android:textColor="@color/logout_text_color_state" />
 
     </LinearLayout>
 
