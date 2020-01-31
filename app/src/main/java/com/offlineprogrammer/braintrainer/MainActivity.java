@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -65,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     ImageButton login_with_amazon;
     Button mLogoutButton;
     TextView textView;
+    ImageView correctImageView;
+    ImageView wrongImageView;
     private boolean mIsLoggedIn;
     private TheGame myGame;
 
@@ -123,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
         mLogoutButton = findViewById(R.id.logout);
         homeLayout = findViewById(R.id.homeLayout);
         mhomeOpsLayout = findViewById(R.id.homeOpsLayout);
+        correctImageView = findViewById(R.id.correctIimageView);
+        wrongImageView = findViewById(R.id.wrongIimageView);
 
 
         homeLayout.setVisibility(View.VISIBLE);
@@ -529,11 +534,15 @@ public class MainActivity extends AppCompatActivity {
         int selectedButton = Integer.parseInt(view.getTag().toString());
 
         if (selectedButton == myGame.locationOfCorrectAnswer){
-            resultTextView.setText("Correct!");
+            wrongImageView.setVisibility(View.GONE);
+            correctImageView.setVisibility(View.VISIBLE);
+            //resultTextView.setText("Correct!");
             score++;
             Log.i("Winner", "button" + selectedButton);
         } else {
-            resultTextView.setText("Wrong :(");
+            wrongImageView.setVisibility(View.VISIBLE);
+            correctImageView.setVisibility(View.GONE);
+            //resultTextView.setText("Wrong :(");
             Log.i("Wrong :( ", "button" + selectedButton);
 
         }
