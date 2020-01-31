@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">Brain Trainer</string>
     <string name="logout">Logout</string>
+    <string name="json_data_msg_key">message</string>
+    <string name="json_data_time_key">timeStamp</string>
+    <string name="json_data_consolidation_key">collapse_key</string>
+    <string name="intent_msg_action">com.amazon.sample.admmessenger.ON_MESSAGE</string>
+    <string name="intent_msg_category">com.amazon.sample.admmessenger.MSG_CATEGORY</string>
+
+    <string name="server_address">INSERT_SERVER_ADDRESS_HERE</string>
+    <string name="server_port">8080</string>
+
 </resources>

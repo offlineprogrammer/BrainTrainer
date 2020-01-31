@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         setupGame();
         setupAds();
         setupAuthorization();
-        register();
+       // register();
 
     }
 

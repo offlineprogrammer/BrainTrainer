@@ -56,7 +56,7 @@
         <activity android:name="com.amazon.device.ads.AdActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
 
         <!--  Declare your ADMMessageHandlerBase implementation as a service -->
-        <service android:name="com.offlineprogrammer.braintrainer.SampleADMMessageHandler"
+        <service android:name="com.offlineprogrammer.braintrainer.ADMMessageHandler"
             android:exported="false" />
 
         <!--  Declare your ADMMessageHandlerJobBase implementation as a service -->
