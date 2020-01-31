@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     Button button3 ;
     private TextView sumTextView;
     TextView timerTextView;
-    Button playAgain;
+
     ConstraintLayout gameLayout;
     ConstraintLayout configLayout;
     ConstraintLayout homeLayout;
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         button2 = findViewById(R.id.button2);
         button3 = findViewById(R.id.button3);
         timerTextView = findViewById(R.id.timerTextView);
-        playAgain = findViewById(R.id.playAgainButton);
+
         gameLayout=findViewById(R.id.gameLayout);
         configLayout = findViewById(R.id.configLayout);
         login_with_amazon = findViewById(R.id.login_with_amazon);
