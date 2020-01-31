@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     ImageView correctImageView;
     ImageView wrongImageView;
+    ImageView playAgainImageView;
     private boolean mIsLoggedIn;
     private TheGame myGame;
 
@@ -128,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
         mhomeOpsLayout = findViewById(R.id.homeOpsLayout);
         correctImageView = findViewById(R.id.correctIimageView);
         wrongImageView = findViewById(R.id.wrongIimageView);
+        playAgainImageView=findViewById(R.id.playAgainImageView);
 
 
         homeLayout.setVisibility(View.VISIBLE);
@@ -235,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
         gameLayout.setVisibility(View.VISIBLE);
         myGame.setActive(true);
         newQuestion();
-        playAgain(playAgain);
+        playAgain(playAgainImageView);
 
 
     }
@@ -501,7 +503,8 @@ public class MainActivity extends AppCompatActivity {
         resultTextView.setText("");
         newQuestion();
         loadAd();
-        playAgain.setVisibility(View.INVISIBLE);
+        playAgainImageView.setVisibility(View.GONE);
+        //playAgain.setVisibility(View.INVISIBLE);
         myGame.setActive(true);
         if(countDownTimer  != null){
             countDownTimer.cancel();
@@ -518,7 +521,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 resultTextView.setText("Done!");
-                playAgain.setVisibility(View.VISIBLE);
+               // playAgain.setVisibility(View.VISIBLE);
+                playAgainImageView.setVisibility(View.VISIBLE);
+                wrongImageView.setVisibility(View.GONE);
+                correctImageView.setVisibility(View.GONE);
                 myGame.setActive(false);
 
 
