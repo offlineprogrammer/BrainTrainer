@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     Button goButton;
 
 
-    TextView resultTextView;
+
     int score = 0;
     int numberOfQuestions = 0;
     TextView scoreTextView;
@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
     private void setupUi() {
         goButton = findViewById(R.id.goButton);
         sumTextView = findViewById(R.id.sumTextView);
-        resultTextView = findViewById(R.id.resultTextView);
         scoreTextView = findViewById(R.id.scoreTextView);
         button0 = findViewById(R.id.button0);
         button1 = findViewById(R.id.button1);
@@ -466,6 +465,9 @@ public class MainActivity extends AppCompatActivity {
         gameLayout.setVisibility(View.INVISIBLE);
         configLayout.setVisibility(View.INVISIBLE);
         setHomeOpsVisibility(View.VISIBLE);
+        wrongImageView.setVisibility(View.GONE);
+        correctImageView.setVisibility(View.GONE);
+        playAgainImageView.setVisibility(View.GONE);
 
         myGame.setOperation(view.getTag().toString());
 
@@ -500,7 +502,7 @@ public class MainActivity extends AppCompatActivity {
         numberOfQuestions=0;
         timerTextView.setText("30s");
         scoreTextView.setText(Integer.toString(score) + "/" + Integer.toString(numberOfQuestions));
-        resultTextView.setText("");
+
         newQuestion();
         loadAd();
         playAgainImageView.setVisibility(View.GONE);
@@ -520,7 +522,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                resultTextView.setText("Done!");
+
                // playAgain.setVisibility(View.VISIBLE);
                 playAgainImageView.setVisibility(View.VISIBLE);
                 wrongImageView.setVisibility(View.GONE);
