@@ -7,8 +7,8 @@ android {
         applicationId "com.offlineprogrammer.braintrainer"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 5
-        versionName '1.15'
+        versionCode 6
+        versionName '1.16'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -32,4 +32,5 @@ dependencies {
     implementation files('login-with-amazon-sdk.jar')
     implementation 'org.jetbrains:annotations-java5:15.0'
     compileOnly files('libs/amazon-device-messaging-1.1.0.jar')
+    implementation 'com.amazonaws:aws-android-sdk-pinpoint:2.15.+'
 }

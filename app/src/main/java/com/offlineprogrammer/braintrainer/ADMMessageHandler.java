@@ -19,7 +19,7 @@ public class ADMMessageHandler extends ADMMessageHandlerBase {
         super(className);
     }
 
-    protected ADMMessageHandler() {
+    public ADMMessageHandler() {
         super(ADMMessageHandler.class.getName());
     }
 
@@ -69,6 +69,18 @@ public class ADMMessageHandler extends ADMMessageHandlerBase {
         broadcastIntent.putExtra(timeKey, time);
         this.sendBroadcast(broadcastIntent);
 
+        /*
+
+        NotificaitonDetails details = NotificationDetailsBuilder.builder()
+                .intent(intent);
+                                .intentAction(NotificationClient.ADM_INTENT_ACTION)
+                .build();
+
+        pinpointManager.getNotificationClient().handleCampaignPush(details)
+
+        
+         */
+
     }
 
     @Override
@@ -85,6 +97,8 @@ public class ADMMessageHandler extends ADMMessageHandlerBase {
         /* Register the app instance's registration ID with your server. */
         MyServerMsgHandler srv = new MyServerMsgHandler();
         srv.registerAppInstance(getApplicationContext(), registrationId);
+
+        // pinpointManager.getNotificationClient().registerDeviceToken(registrationId)
     }
 
     @Override
