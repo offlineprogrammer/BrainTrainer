@@ -7,6 +7,7 @@ import android.util.Log;
 import com.amazon.device.messaging.ADMConstants;
 import com.amazon.device.messaging.ADMMessageHandlerBase;
 
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -97,6 +98,8 @@ public class ADMMessageHandler extends ADMMessageHandlerBase {
         /* Register the app instance's registration ID with your server. */
         MyServerMsgHandler srv = new MyServerMsgHandler();
         srv.registerAppInstance(getApplicationContext(), registrationId);
+
+
 
         // pinpointManager.getNotificationClient().registerDeviceToken(registrationId)
     }

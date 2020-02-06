@@ -36,6 +36,19 @@ import com.amazon.identity.auth.device.api.workflow.RequestContext;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import com.amplifyframework.AmplifyException;
+import com.amplifyframework.analytics.AnalyticsException;
+import com.amplifyframework.core.Amplify;
+import com.amplifyframework.analytics.pinpoint.AmazonPinpointAnalyticsPlugin;
+import com.amplifyframework.core.AmplifyConfiguration;
+
+import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.UserStateDetails;
+import com.amazonaws.mobile.config.AWSConfiguration;
+import com.amazonaws.mobile.client.AWSMobileClient;
 
 
 
@@ -75,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
     private AdLayout adView; // The ad view used to load and display the ad.
     private static final String APP_KEY = "3967f616abb34b3c9f83c8d4c86eec34"; // Sample Application Key. Replace this value with your Application Key.
     private static final String LOG_TAG = "SimpleAdSample"; // Tag used to prefix all log messages.
+    private static final int INITIALIZATION_TIMEOUT_MS = 2000;
 
     private RequestContext requestContext;
     private ProgressBar mLogInProgress;
@@ -105,6 +119,45 @@ public class MainActivity extends AppCompatActivity {
         setupAds();
         setupAuthorization();
        // register();
+
+
+        final AWSConfiguration awsConfiguration = new AWSConfiguration(getApplicationContext());
+        final CountDownLatch mobileClientLatch = new CountDownLatch(1);
+        AWSMobileClient.getInstance().initialize(getApplicationContext(), awsConfiguration,
+                new Callback<UserStateDetails>() {
+                    @Override
+                    public void onResult(UserStateDetails userStateDetails) {
+                        Log.i(TAG, "Mobile client initialized");
+                        mobileClientLatch.countDown();
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+                        Log.e(TAG, "Error initializing AWS Mobile Client", exception);
+                    }
+                });
+
+        try {
+            if (!mobileClientLatch.await(INITIALIZATION_TIMEOUT_MS, TimeUnit.MILLISECONDS)) {
+                throw new AnalyticsException("Failed to initialize mobile client.",
+                        "Please check your awsconfiguration json.");
+            }
+        } catch (InterruptedException | AnalyticsException exception) {
+            throw new RuntimeException("Failed to initialize mobile client: " + exception.getLocalizedMessage());
+        }
+
+        // Configure Amplify framework
+        AmplifyConfiguration configuration = new AmplifyConfiguration();
+        try {
+            configuration.populateFromConfigFile(getApplicationContext(), R.raw.amplifyconfiguration);
+            Amplify.addPlugin(new AmazonPinpointAnalyticsPlugin());
+            Amplify.configure(configuration, getApplicationContext());
+        } catch (AmplifyException e) {
+            e.printStackTrace();
+        }
+        Amplify.Analytics.recordEvent("test-event");
+
+
 
     }
 
