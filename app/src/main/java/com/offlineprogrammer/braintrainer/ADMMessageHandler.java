@@ -1,11 +1,20 @@
 package com.offlineprogrammer.braintrainer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.amazon.device.messaging.ADMConstants;
 import com.amazon.device.messaging.ADMMessageHandlerBase;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.UserStateDetails;
+import com.amazonaws.mobile.config.AWSConfiguration;
+import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
+import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
+import com.amazonaws.mobileconnectors.pinpoint.targeting.notification.NotificationClient;
+import com.amazonaws.mobileconnectors.pinpoint.targeting.notification.NotificationDetails;
 
 
 import java.util.HashMap;
@@ -15,6 +24,7 @@ import java.util.Set;
 public class ADMMessageHandler extends ADMMessageHandlerBase {
 
     private final static String TAG = ADMMessageHandler.class.getName();
+    private static PinpointManager pinpointManager;
 
     protected ADMMessageHandler(String className) {
         super(className);
@@ -22,6 +32,33 @@ public class ADMMessageHandler extends ADMMessageHandlerBase {
 
     public ADMMessageHandler() {
         super(ADMMessageHandler.class.getName());
+    }
+
+    public static PinpointManager getPinpointManager(final Context applicationContext) {
+        if (pinpointManager == null) {
+            final AWSConfiguration awsConfig = new AWSConfiguration(applicationContext);
+            AWSMobileClient.getInstance().initialize(applicationContext, awsConfig, new Callback<UserStateDetails>() {
+                @Override
+                public void onResult(UserStateDetails userStateDetails) {
+                    Log.i("INIT", userStateDetails.getUserState().toString());
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("INIT", "Initialization error.", e);
+                }
+            });
+
+            PinpointConfiguration pinpointConfig = new PinpointConfiguration(
+                    applicationContext,
+                    AWSMobileClient.getInstance(),
+                    awsConfig);
+
+            pinpointManager = new PinpointManager(pinpointConfig);
+
+
+        }
+        return pinpointManager;
     }
 
 
@@ -70,17 +107,17 @@ public class ADMMessageHandler extends ADMMessageHandlerBase {
         broadcastIntent.putExtra(timeKey, time);
         this.sendBroadcast(broadcastIntent);
 
-        /*
 
-        NotificaitonDetails details = NotificationDetailsBuilder.builder()
-                .intent(intent);
-                                .intentAction(NotificationClient.ADM_INTENT_ACTION)
+
+        NotificationDetails details = NotificationDetails.builder()
+                .intent(intent)
+                .intentAction(NotificationClient.ADM_INTENT_ACTION)
                 .build();
 
-        pinpointManager.getNotificationClient().handleCampaignPush(details)
+        pinpointManager.getNotificationClient().handleCampaignPush(details);
+
 
         
-         */
 
     }
 
@@ -100,8 +137,10 @@ public class ADMMessageHandler extends ADMMessageHandlerBase {
         srv.registerAppInstance(getApplicationContext(), registrationId);
 
 
+        getPinpointManager(getApplicationContext());
 
-        // pinpointManager.getNotificationClient().registerDeviceToken(registrationId)
+
+        pinpointManager.getNotificationClient().registerDeviceToken(registrationId);
     }
 
     @Override
