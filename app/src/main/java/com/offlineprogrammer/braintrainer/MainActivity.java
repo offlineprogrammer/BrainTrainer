@@ -101,12 +101,17 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar mLogInProgress;
 
 
-    private void recordEvent(String sEventName) throws AnalyticsException {
+    private void recordEvent(String sEventName)  {
+        try {
+            Amplify.Analytics.recordEvent(sEventName);
+            // Plugin will automatically flush events.
+            // You do not have to do this in the app code.
+            Amplify.Analytics.flushEvents();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        Amplify.Analytics.recordEvent(sEventName);
-        // Plugin will automatically flush events.
-        // You do not have to do this in the app code.
-        Amplify.Analytics.flushEvents();
+
     }
 
 
@@ -178,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (AmplifyException e) {
             e.printStackTrace();
         }
-        Amplify.Analytics.recordEvent("test-event");
+        Amplify.Analytics.recordEvent("App Started");
     }
 
     private void setupUi() {
@@ -212,12 +217,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupGame(){
         myGame = new TheGame("+");
-        try {
-            recordEvent("New Game " + myGame.getOperation());
-        } catch (AnalyticsException e) {
-            e.printStackTrace();
-        }
-
+        recordEvent("New Game " + myGame.getOperation());
     }
 
     @Override
@@ -334,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
                         configLayout.setVisibility(View.INVISIBLE);
                         gameLayout.setVisibility(View.INVISIBLE);
                         myGame.setActive(false);
+                        recordEvent("User LoggedOut");
                     }
                 });
             }
@@ -412,6 +413,8 @@ public class MainActivity extends AppCompatActivity {
                 final String zipCode = user.getUserPostalCode();
 
                 Log.i("Info","Welcome MM");
+                recordEvent("User LoggedIn");
+
 
 
 
