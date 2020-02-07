@@ -36,9 +36,11 @@ import com.amazon.identity.auth.device.api.workflow.RequestContext;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import com.amazonaws.mobileconnectors.pinpoint.analytics.AnalyticsEvent;
 import com.amplifyframework.AmplifyException;
 import com.amplifyframework.analytics.AnalyticsException;
 import com.amplifyframework.core.Amplify;
@@ -49,6 +51,11 @@ import com.amazonaws.mobile.client.Callback;
 import com.amazonaws.mobile.client.UserStateDetails;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobile.client.AWSMobileClient;
+
+import com.amplifyframework.core.Amplify;
+import com.amplifyframework.analytics.AnalyticsException;
+import com.amplifyframework.analytics.BasicAnalyticsEvent;
+import com.amplifyframework.analytics.pinpoint.PinpointProperties;
 
 
 
@@ -94,6 +101,15 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar mLogInProgress;
 
 
+    private void recordEvent(String sEventName) throws AnalyticsException {
+
+        Amplify.Analytics.recordEvent(sEventName);
+        // Plugin will automatically flush events.
+        // You do not have to do this in the app code.
+        Amplify.Analytics.flushEvents();
+    }
+
+
 
 
 
@@ -114,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setupAmplify();
         setupUi();
         setupGame();
         setupAds();
@@ -121,6 +138,12 @@ public class MainActivity extends AppCompatActivity {
        // register();
 
 
+
+
+
+    }
+
+    private void setupAmplify() {
         final AWSConfiguration awsConfiguration = new AWSConfiguration(getApplicationContext());
         final CountDownLatch mobileClientLatch = new CountDownLatch(1);
         AWSMobileClient.getInstance().initialize(getApplicationContext(), awsConfiguration,
@@ -156,9 +179,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         Amplify.Analytics.recordEvent("test-event");
-
-
-
     }
 
     private void setupUi() {
@@ -192,6 +212,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupGame(){
         myGame = new TheGame("+");
+        try {
+            recordEvent("New Game " + myGame.getOperation());
+        } catch (AnalyticsException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
