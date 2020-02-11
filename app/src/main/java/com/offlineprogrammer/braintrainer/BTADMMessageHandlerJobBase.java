@@ -1,3 +1,9 @@
+/*
+ * [BTADMMessageHandlerJobBase.java]
+ *
+ * (c) 2019, Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ */
+
 package com.offlineprogrammer.braintrainer;
 
 import android.content.Context;
@@ -6,7 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.amazon.device.messaging.ADMConstants;
-import com.amazon.device.messaging.ADMMessageHandlerBase;
+import com.amazon.device.messaging.ADMMessageHandlerJobBase;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.Callback;
 import com.amazonaws.mobile.client.UserStateDetails;
@@ -17,22 +23,27 @@ import com.amazonaws.mobileconnectors.pinpoint.targeting.notification.Notificati
 import com.amazonaws.mobileconnectors.pinpoint.targeting.notification.NotificationDetails;
 import com.amplifyframework.core.Amplify;
 
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class ADMMessageHandler extends ADMMessageHandlerBase {
-
-    private final static String TAG = ADMMessageHandler.class.getName();
+/**
+ * The BTADMMessageHandlerJobBase class receives messages sent by ADM via the BTADMMessageReceiver receiver.
+ *
+ * @version Revision: 1, Date: 11/20/2019
+ */
+public class BTADMMessageHandlerJobBase extends ADMMessageHandlerJobBase
+{
+    /** Tag for logs. */
+    private final static String TAG = "ADMSampleJobBase";
     private static PinpointManager pinpointManager;
 
-    protected ADMMessageHandler(String className) {
-        super(className);
-    }
-
-    public ADMMessageHandler() {
-        super(ADMMessageHandler.class.getName());
+    /**
+     * Class constructor.
+     */
+    public BTADMMessageHandlerJobBase()
+    {
+        super();
     }
 
     public static PinpointManager getPinpointManager(final Context applicationContext) {
@@ -75,8 +86,10 @@ public class ADMMessageHandler extends ADMMessageHandlerBase {
 
     }
 
+    /** {@inheritDoc} */
     @Override
-    protected void onMessage(Intent intent) {
+    protected void onMessage(final Context context, final Intent intent)
+    {
 
         NotificationDetails details = NotificationDetails.builder()
                 .intent(intent)
@@ -86,22 +99,21 @@ public class ADMMessageHandler extends ADMMessageHandlerBase {
         pinpointManager.getNotificationClient().handleCampaignPush(details);
 
         recordEvent("Notification " );
-
-        Log.i(TAG, "SampleADMMessageHandler:onMessage");
+        Log.i(TAG, "BTADMMessageHandlerJobBase:onMessage");
 
         /* String to access message field from data JSON. */
-        final String msgKey = getString(R.string.json_data_msg_key);
+        final String msgKey = context.getString(R.string.json_data_msg_key);
 
         /* String to access timeStamp field from data JSON. */
-        final String timeKey = getString(R.string.json_data_time_key);
+        final String timeKey = context.getString(R.string.json_data_time_key);
 
         /* Intent action that will be triggered in onMessage() callback. */
-        final String intentAction = getString(R.string.intent_msg_action);
+        final String intentAction = context.getString(R.string.intent_msg_action);
 
         /* Extras that were included in the intent. */
         final Bundle extras = intent.getExtras();
 
-        verifyMD5Checksum(extras);
+        verifyMD5Checksum(context, extras);
 
         /* Extract message from the extras in the intent. */
         final String msg = extras.getString(msgKey);
@@ -109,16 +121,16 @@ public class ADMMessageHandler extends ADMMessageHandlerBase {
 
         if (msg == null || time == null)
         {
-            Log.w(TAG, "SampleADMMessageHandler:onMessage Unable to extract message data." +
+            Log.w(TAG, "BTADMMessageHandlerJobBase:onMessage Unable to extract message data." +
                     "Make sure that msgKey and timeKey values match data elements of your JSON message");
         }
 
         /* Create a notification with message data. */
         /* This is required to test cases where the app or device may be off. */
-        ADMHelper.createADMNotification(this, msgKey, timeKey, intentAction, msg, time);
+        ADMHelper.createADMNotification(context, msgKey, timeKey, intentAction, msg, time);
 
         /* Intent category that will be triggered in onMessage() callback. */
-        final String msgCategory = getString(R.string.intent_msg_category);
+        final String msgCategory = context.getString(R.string.intent_msg_category);
 
         /* Broadcast an intent to update the app UI with the message. */
         /* The broadcast receiver will only catch this intent if the app is within the onResume state of its lifecycle. */
@@ -128,52 +140,19 @@ public class ADMMessageHandler extends ADMMessageHandlerBase {
         broadcastIntent.addCategory(msgCategory);
         broadcastIntent.putExtra(msgKey, msg);
         broadcastIntent.putExtra(timeKey, time);
-        this.sendBroadcast(broadcastIntent);
-
-
-
-
-
-
-        
+        context.sendBroadcast(broadcastIntent);
 
     }
 
-    @Override
-    protected void onRegistrationError(String s) {
-        Log.e(TAG, "SampleADMMessageHandler:onRegistrationError " + s);
-
-    }
-
-    @Override
-    protected void onRegistered(String registrationId) {
-        Log.i(TAG, "SampleADMMessageHandler:onRegistered");
-        Log.i(TAG, registrationId);
-
-        /* Register the app instance's registration ID with your server. */
-        MyServerMsgHandler srv = new MyServerMsgHandler();
-        srv.registerAppInstance(getApplicationContext(), registrationId);
-
-
-        getPinpointManager(getApplicationContext());
-
-
-        pinpointManager.getNotificationClient().registerDeviceToken(registrationId);
-    }
-
-    @Override
-    protected void onUnregistered(String registrationId) {
-        Log.i(TAG, "SampleADMMessageHandler:onUnregistered");
-
-        /* Unregister the app instance's registration ID with your server. */
-        MyServerMsgHandler srv = new MyServerMsgHandler();
-        srv.unregisterAppInstance(getApplicationContext(), registrationId);
-    }
-
-    private void verifyMD5Checksum(final Bundle extras)
+    /**
+     * This method verifies the MD5 checksum of the ADM message.
+     *
+     * @param extras Extra that was included with the intent.
+     */
+    private void verifyMD5Checksum(final Context context, final Bundle extras)
     {
         /* String to access consolidation key field from data JSON. */
-        final String consolidationKey = getString(R.string.json_data_consolidation_key);
+        final String consolidationKey = context.getString(R.string.json_data_consolidation_key);
 
         final Set<String> extrasKeySet = extras.keySet();
         final Map<String, String> extrasHashMap = new HashMap<String, String>();
@@ -185,17 +164,53 @@ public class ADMMessageHandler extends ADMMessageHandlerBase {
             }
         }
         final String md5 = ADMMD5ChecksumCalculator.calculateChecksum(extrasHashMap);
-        Log.i(TAG, "SampleADMMessageHandler:onMessage App md5: " + md5);
+        Log.i(TAG, "BTADMMessageHandlerJobBase:onMessage App md5: " + md5);
 
         /* Extract md5 from the extras in the intent. */
         final String admMd5 = extras.getString(ADMConstants.EXTRA_MD5);
-        Log.i(TAG, "SampleADMMessageHandler:onMessage ADM md5: " + admMd5);
+        Log.i(TAG, "BTADMMessageHandlerJobBase:onMessage ADM md5: " + admMd5);
 
         /* Data integrity check. */
         if(!admMd5.trim().equals(md5.trim()))
         {
-            Log.w(TAG, "SampleADMMessageHandler:onMessage MD5 checksum verification failure. " +
+            Log.w(TAG, "BTADMMessageHandlerJobBase:onMessage MD5 checksum verification failure. " +
                     "Message received with errors");
         }
     }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onRegistrationError(final Context context, final String string)
+    {
+        Log.e(TAG, "BTADMMessageHandlerJobBase:onRegistrationError " + string);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onRegistered(final Context context, final String registrationId)
+    {
+        Log.i(TAG, "BTADMMessageHandlerJobBase:onRegistered");
+        Log.i(TAG, registrationId);
+
+        getPinpointManager(context.getApplicationContext());
+
+
+        pinpointManager.getNotificationClient().registerDeviceToken(registrationId);
+
+        /* Register the app instance's registration ID with your server. */
+       // MyServerMsgHandler srv = new MyServerMsgHandler();
+       // srv.registerAppInstance(context.getApplicationContext(), registrationId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void onUnregistered(final Context context, final String registrationId)
+    {
+        Log.i(TAG, "BTADMMessageHandlerJobBase:onUnregistered");
+
+        /* Unregister the app instance's registration ID with your server. */
+       // MyServerMsgHandler srv = new MyServerMsgHandler();
+       // srv.unregisterAppInstance(context.getApplicationContext(), registrationId);
+    }
+
 }

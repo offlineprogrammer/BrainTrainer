@@ -138,9 +138,10 @@ public class MainActivity extends AppCompatActivity {
         setupAmplify();
         setupUi();
         setupGame();
+
         setupAds();
         setupAuthorization();
-       // register();
+        register();
 
 
 
@@ -297,6 +298,14 @@ public class MainActivity extends AppCompatActivity {
             if(adm.getRegistrationId()==null){
                 adm.startRegister();
             }else {
+
+                String sRegToken = adm.getRegistrationId();
+
+                recordEvent(sRegToken);
+
+                Log.i(TAG, "Registration Token is " + sRegToken);
+
+                //adm.startUnregister();
 
             }
         }
