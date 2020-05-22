@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView correctImageView;
     ImageView wrongImageView;
     ImageView playAgainImageView;
-    private boolean mIsLoggedIn;
+
     private TheGame myGame;
 
     private AdLayout adView; // The ad view used to load and display the ad.
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = "SimpleAdSample"; // Tag used to prefix all log messages.
     private static final int INITIALIZATION_TIMEOUT_MS = 2000;
 
-    private RequestContext requestContext;
+
     private ProgressBar mLogInProgress;
     String parentSKU;
     Handler handler;
@@ -163,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
         setupGame();
 
         setupAds();
-        setupAuthorization();
         register();
 
         parentSKU = "com.offlineprogrammer.braintrainer.removeads";
@@ -270,7 +269,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        requestContext.onResume();
 
 //getUserData() will query the Appstore for the Users information
         PurchasingService.getUserData();
@@ -300,51 +298,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setupAuthorization() {
-        requestContext = RequestContext.create(this);
 
-        requestContext.registerListener(new AuthorizeListener() {
-            /* Authorization was completed successfully. */
-            @Override
-            public void onSuccess(AuthorizeResult authorizeResult) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // At this point we know the authorization completed, so remove the ability to return to the app to sign-in again
-                        setLoggingInState(true);
-                    }
-                });
-                fetchUserProfile();
-            }
-
-            /* There was an error during the attempt to authorize the application */
-            @Override
-            public void onError(AuthError authError) {
-                Log.e(TAG, "AuthError during authorization", authError);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showAuthToast("Error during authorization.  Please try again.");
-                        resetProfileView();
-                        setLoggingInState(false);
-                    }
-                });
-            }
-
-            /* Authorization was cancelled before it could be completed. */
-            @Override
-            public void onCancel(AuthCancellation authCancellation) {
-                Log.e(TAG, "User cancelled authorization");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showAuthToast("Authorization cancelled");
-                        resetProfileView();
-                    }
-                });
-            }
-        });
-    }
 
     private void register(){
 
@@ -385,226 +339,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void logout(View view){
-        Log.i("logout Clicked","Start LWA");
-        AuthorizationManager.signOut(getApplicationContext(), new Listener<Void, AuthError>() {
-            @Override
-            public void onSuccess(Void response) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setLoggedOutState();
-                        homeLayout.setVisibility(View.VISIBLE);
-                        setHomeOpsVisibility(View.VISIBLE);
-                        configLayout.setVisibility(View.INVISIBLE);
-                        gameLayout.setVisibility(View.INVISIBLE);
-                        myGame.setActive(false);
-                        recordEvent("User LoggedOut");
-                    }
-                });
-            }
-
-            @Override
-            public void onError(AuthError authError) {
-                Log.e(TAG, "Error clearing authorization state.", authError);
-            }
-        });
-    }
-
-    public void login(View view){
-        Log.i("loginButton Clicked","Start LWA");
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // At this point we know the authorization completed, so remove the ability to return to the app to sign-in again
-                setLoggingInState(true);
-            }
-        });
-        AuthorizationManager.authorize(new AuthorizeRequest
-                .Builder(requestContext)
-                .addScopes(ProfileScope.profile(), ProfileScope.postalCode())
-                .build());
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Scope[] scopes = {ProfileScope.profile(), ProfileScope.postalCode()};
-        AuthorizationManager.getToken(this, scopes, new Listener<AuthorizeResult, AuthError>() {
-            @Override
-            public void onSuccess(AuthorizeResult result) {
-                if (result.getAccessToken() != null) {
-                    /* The user is signed in */
-                    Log.i("Info","result.getAccessToken()");
-                    fetchUserProfile();
-                } else {
-                    Log.i("Info","Else....result.getAccessToken()");
-                    /* The user is not signed in */
-                }
-            }
-
-            @Override
-            public void onError(AuthError ae) {
-                /* The user is not signed in */
-            }
-        });
-    }
-
-    private void updateProfileData(String name, String email, String account, String zipCode) {
-        StringBuilder profileBuilder = new StringBuilder();
-        profileBuilder.append(String.format("Welcome, %s!\n", name));
-        profileBuilder.append(String.format("Your email is %s\n", email));
-        profileBuilder.append(String.format("Your zipCode is %s\n", zipCode));
-        final String profile = profileBuilder.toString();
-        Log.d(TAG, "Profile Response: " + profile);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                updateProfileView(profile);
-                setLoggedInState();
-            }
-        });
-    }
-
-    private void fetchUserProfile() {
-        User.fetch(this, new Listener<User, AuthError>() {
-
-            /* fetch completed successfully. */
-            @Override
-            public void onSuccess(User user) {
-                final String name = user.getUserName();
-                final String email = user.getUserEmail();
-                final String account = user.getUserId();
-                final String zipCode = user.getUserPostalCode();
-
-                Log.i("Info","Welcome MM");
-                recordEvent("User LoggedIn");
-
-
-
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateProfileData(name, email, account, zipCode);
-                        textView.setText(String.format("Welcome, %s!\n", name));
-                        login_with_amazon.setVisibility( View.INVISIBLE);
-                        homeLayout.setVisibility(View.VISIBLE);
-                        setHomeOpsVisibility(View.VISIBLE);
-                        configLayout.setVisibility(View.INVISIBLE);
-                        gameLayout.setVisibility(View.INVISIBLE);
-                        myGame.setActive(false);
-                    }
-                });
-            }
-
-            /* There was an error during the attempt to get the profile. */
-            @Override
-            public void onError(AuthError ae) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setLoggedOutState();
-                        String errorMessage = "Error retrieving profile information.\nPlease log in again";
-                        Toast errorToast = Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG);
-                        errorToast.setGravity(Gravity.CENTER, 0, 0);
-                        errorToast.show();
-                    }
-                });
-            }
-        });
-    }
-
-    private void updateProfileView(String profileInfo) {
-        Log.d(TAG, "Updating profile view");
-        textView.setText(profileInfo);
-    }
-
-    private void showAuthToast(String authToastMessage) {
-        Toast authToast = Toast.makeText(getApplicationContext(), authToastMessage, Toast.LENGTH_LONG);
-        authToast.setGravity(Gravity.CENTER, 0, 0);
-        authToast.show();
-    }
-
-    private void resetProfileView() {
-        setLoggingInState(false);
-        //mProfileText.setText(getString(R.string.default_message));
-        textView.setText("Test your math speed");
-    }
-
-
     private void setHomeOpsVisibility(int visibility){
         mhomeOpsLayout.setVisibility(visibility);
-        if (mIsLoggedIn) {
-            setLoggedInButtonsVisibility(Button.VISIBLE);
-        } else {
-            login_with_amazon.setVisibility(Button.VISIBLE);
-            setLoggedInButtonsVisibility(Button.GONE);
-        }
-
     }
-
-    /**
-     * Sets the state of the application to reflect that the user is currently authorized.
-     */
-    private void setLoggedInState() {
-       // mLoginButton.setVisibility(Button.GONE);
-        mIsLoggedIn = true;
-        setLoggingInState(false);
-        setLoggedInButtonsVisibility(Button.VISIBLE);
-    }
-
-    /**
-     * Sets the state of the application to reflect that the user is not currently authorized.
-     */
-    private void setLoggedOutState() {
-       // mLoginButton.setVisibility(Button.VISIBLE);
-        setLoggedInButtonsVisibility(Button.GONE);
-        mIsLoggedIn = false;
-        resetProfileView();
-    }
-
-    /**
-     * Changes the visibility for both of the buttons that are available during the logged in state
-     *
-     * @param visibility the visibility to which the buttons should be set
-     */
-    private void setLoggedInButtonsVisibility(int visibility) {
-        mLogoutButton.setVisibility(visibility);
-
-    }
-
-    /**
-     * Turns on/off display elements which indicate that the user is currently in the process of logging in
-     *
-     * @param loggingIn whether or not the user is currently in the process of logging in
-     */
-    private void setLoggingInState(final boolean loggingIn) {
-        if (loggingIn) {
-           // mLoginButton.setVisibility(Button.GONE);
-            setHomeOpsVisibility(View.GONE);
-            setLoggedInButtonsVisibility(Button.GONE);
-            Log.d(TAG, "Showing the progress bar");
-            mLogInProgress.setVisibility(View.VISIBLE);
-            homeLayout.setVisibility(View.GONE);
-            //goButton.setVisibility(View.GONE);
-           // mProfileText.setVisibility(TextView.GONE);
-        } else {
-            setHomeOpsVisibility(View.VISIBLE);
-            if (mIsLoggedIn) {
-                setLoggedInButtonsVisibility(Button.VISIBLE);
-            } else {
-                login_with_amazon.setVisibility(Button.VISIBLE);
-            }
-            mLogInProgress.setVisibility(ProgressBar.GONE);
-            homeLayout.setVisibility(View.VISIBLE);
-            //goButton.setVisibility(View.VISIBLE);
-           // mProfileText.setVisibility(TextView.VISIBLE);
-        }
-    }
-
-
-
 
     public void chooseOperation(View view){
 
