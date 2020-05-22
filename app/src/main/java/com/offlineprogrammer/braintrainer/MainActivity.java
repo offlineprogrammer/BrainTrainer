@@ -3,8 +3,12 @@ package com.offlineprogrammer.braintrainer;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -19,6 +23,15 @@ import android.widget.Toast;
 
 import com.amazon.device.ads.AdLayout;
 import com.amazon.device.ads.AdRegistration;
+import com.amazon.device.iap.PurchasingListener;
+import com.amazon.device.iap.PurchasingService;
+import com.amazon.device.iap.model.FulfillmentResult;
+import com.amazon.device.iap.model.Product;
+import com.amazon.device.iap.model.ProductDataResponse;
+import com.amazon.device.iap.model.PurchaseResponse;
+import com.amazon.device.iap.model.PurchaseUpdatesResponse;
+import com.amazon.device.iap.model.Receipt;
+import com.amazon.device.iap.model.UserDataResponse;
 import com.amazon.device.messaging.ADM;
 import com.amazon.identity.auth.device.AuthError;
 import com.amazon.identity.auth.device.api.Listener;
@@ -35,7 +48,10 @@ import com.amazon.identity.auth.device.api.workflow.RequestContext;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -63,6 +79,11 @@ import com.amplifyframework.analytics.pinpoint.PinpointProperties;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();
+
+    //Define UserId and MarketPlace
+    private String currentUserId;
+    private String currentMarketplace;
+
 
     Button goButton;
 
@@ -99,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
 
     private RequestContext requestContext;
     private ProgressBar mLogInProgress;
+    String parentSKU;
+    Handler handler;
 
 
     private void recordEvent(String sEventName)  {
@@ -142,6 +165,29 @@ public class MainActivity extends AppCompatActivity {
         setupAds();
         setupAuthorization();
         register();
+
+        parentSKU = "com.offlineprogrammer.braintrainer.removeads";
+
+        PurchasingService.registerListener(this, purchasingListener);
+
+        Button button = (Button) findViewById(R.id.iapButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PurchasingService.purchase(parentSKU);
+            }
+        });
+
+        //create a handler for the UI changes
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                if (msg.obj.equals("Subscribed")) {
+                    button.setText("complete");
+
+                }
+            }
+        };
 
 
 
@@ -225,6 +271,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         requestContext.onResume();
+
+//getUserData() will query the Appstore for the Users information
+        PurchasingService.getUserData();
+//getPurchaseUpdates() will query the Appstore for any previous purchase
+        PurchasingService.getPurchaseUpdates(true);
+//getProductData will validate the SKUs with Amazon Appstore
+        final Set<String> productSkus = new HashSet<String>();
+        productSkus.add(parentSKU);
+        PurchasingService.getProductData(productSkus);
+        Log.v("Validating SKUs", "Validating SKUs with Amazon" );
     }
 
     private void setupAds() {
@@ -650,4 +706,77 @@ public class MainActivity extends AppCompatActivity {
         newQuestion();
 
     }
+
+    PurchasingListener purchasingListener = new PurchasingListener() {
+        @Override
+        public void onUserDataResponse(UserDataResponse response) {
+            final UserDataResponse.RequestStatus status = response.getRequestStatus();
+            switch (status) {
+                case SUCCESSFUL:
+                    currentUserId = response.getUserData().getUserId();
+                    currentMarketplace = response.getUserData().getMarketplace();
+                    break;
+                case FAILED:
+                case NOT_SUPPORTED:
+                    // Fail gracefully.
+                    break;
+            }
+        }
+        @Override
+        public void onProductDataResponse(ProductDataResponse productDataResponse) {
+            switch (productDataResponse.getRequestStatus()) {
+                case SUCCESSFUL:
+
+                    //get informations for all IAP Items (parent SKUs)
+                    final Map<String,Product> products = productDataResponse.getProductData();
+                    for ( String key : products.keySet()) {
+                        Product product = products.get(key);
+                        Log.v("Product:", String.format( "Product: %s\n Type: %s\n SKU: %s\n Price: %s\n Description: %s\n" , product.getTitle(), product.getProductType(),
+                                product.getSku(), product.getPrice(), product.getDescription()));
+                    }
+                    //get all unavailable SKUs
+                    for ( String s : productDataResponse.getUnavailableSkus()) {
+                        Log.v("Unavailable SKU:"+s, "Unavailable SKU:" + s);
+                    }
+                    break;
+                case FAILED:
+                    Log.v("FAILED", "FAILED" );
+                    break ;
+            }
+        }
+        @Override
+        public void onPurchaseResponse(PurchaseResponse purchaseResponse) {
+            switch (purchaseResponse.getRequestStatus()) {
+                case SUCCESSFUL:
+                    PurchasingService.notifyFulfillment(purchaseResponse.getReceipt().getReceiptId(),
+                            FulfillmentResult.FULFILLED);
+                    break ;
+                case FAILED:
+                    break ;
+            }
+        }
+        @Override
+        public void onPurchaseUpdatesResponse(PurchaseUpdatesResponse response) {
+            // Process receipts
+            switch (response.getRequestStatus()) {
+                case SUCCESSFUL:
+                    for ( final Receipt receipt : response.getReceipts()) {
+                        // Process receipts
+                        if (!receipt.isCanceled()){
+                            Message m= new Message();
+                            m.obj="Subscribed";
+                            handler.handleMessage(m);
+                        }
+                    }
+                    if (response.hasMore()) {
+                        PurchasingService.getPurchaseUpdates(true);
+                    }
+                    break ;
+                case FAILED:
+                    Log.d("FAILED","FAILED");
+                    break ;
+            }
+
+        }
+    };
 }

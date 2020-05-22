@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FF9800</color>
-    <color name="colorPrimaryDark">#009688</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#F37D14</color>
+    <color name="colorPrimaryDark">#FD9725</color>
+    <color name="colorPrimaryDisabled">#9e9e9e</color>
+    <color name="colorAccent">#F7C213</color>
+    <color name="toolbarIconColor">#FFFFFF</color>
+    <color name="taskGridBackgroundColor">#FFFFFF</color>
+    <color name="colorBackground">#6200EE</color>
+    <color name="colorSplashBackground">#F58E15</color>
+    <color name="guestTextView_color">#9e9e9e</color>
     <color name="blue">#0033CC</color>
     <color name="orange">#FF9900</color>
     <color name="gray">#D8D8D8</color>

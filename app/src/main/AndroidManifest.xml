@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"  xmlns:amazon="http://schemas.amazon.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:amazon="http://schemas.amazon.com/apk/res/android"
     package="com.offlineprogrammer.braintrainer">
-
     <!-- This permission ensures that no other application can intercept your ADM messages. -->
     <permission
         android:name="com.offlineprogrammer.braintrainer.permission.RECEIVE_ADM_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="com.offlineprogrammer.braintrainer.permission.RECEIVE_ADM_MESSAGE" />
 
-    <!-- This permission allows your app access to receive push notifications from ADM. -->
-    <uses-permission android:name="com.amazon.device.messaging.permission.RECEIVE" />
-
-    <!-- ADM uses WAKE_LOCK to keep the processor from sleeping when a message is received. -->
+    <uses-permission android:name="com.offlineprogrammer.braintrainer.permission.RECEIVE_ADM_MESSAGE" /> <!-- This permission allows your app access to receive push notifications from ADM. -->
+    <uses-permission android:name="com.amazon.device.messaging.permission.RECEIVE" /> <!-- ADM uses WAKE_LOCK to keep the processor from sleeping when a message is received. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <uses-feature android:name="android.hardware.location" android:required="false" />
-    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
-    <uses-feature android:name="android.hardware.location.network" android:required="false" />
-    <uses-feature android:name="android.hardware.wifi" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="false" />
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" android:required="false" />
-    <uses-permission android:name="android.permission.INTERNET" android:required="false" />
-
+    <uses-permission
+        android:name="android.permission.ACCESS_NETWORK_STATE"
+        android:required="false" />
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        android:required="false" />
 
     <application
         android:name=".App"
@@ -30,52 +38,67 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme">
-        <amazon:enable-feature
-            android:name="com.amazon.device.messaging"
-            android:required="true"/>
-        <activity android:name="com.amazon.identity.auth.device.workflow.WorkflowActivity"
-            android:theme="@android:style/Theme.NoDisplay"
-            android:allowTaskReparenting="true"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <!-- android:host must use the full package name found in Manifest General Attributes -->
-                <data android:host="com.offlineprogrammer.braintrainer" android:scheme="amzn"/>
-            </intent-filter>
-        </activity>
-        <activity android:name=".MainActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.amazon.device.ads.AdActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name=".MainActivity" />
 
-        <!--  Declare your ADMMessageHandlerBase implementation as a service -->
-        <service android:name="com.offlineprogrammer.braintrainer.ADMMessageHandler"
-            android:exported="false" />
+        <amazon:enable-feature
+            android:name="com.amazon.device.messaging"
+            android:required="true" />
 
-        <!--  Declare your ADMMessageHandlerJobBase implementation as a service -->
+        <activity
+            android:name="com.amazon.identity.auth.device.workflow.WorkflowActivity"
+            android:allowTaskReparenting="true"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
-        <service android:name="com.offlineprogrammer.braintrainer.BTADMMessageHandlerJobBase"
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- android:host must use the full package name found in Manifest General Attributes -->
+                <data
+                    android:host="com.offlineprogrammer.braintrainer"
+                    android:scheme="amzn" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.amazon.device.ads.AdActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <receiver android:name="com.amazon.device.iap.ResponseReceiver">
+            <intent-filter>
+                <action
+                    android:name="com.amazon.inapp.purchasing.NOTIFY"
+                    android:permission="com.amazon.inapp.purchasing.Permission.NOTIFY" />
+            </intent-filter>
+        </receiver> <!-- Declare your ADMMessageHandlerBase implementation as a service -->
+        <service
+            android:name=".ADMMessageHandler"
+            android:exported="false" /> <!-- Declare your ADMMessageHandlerJobBase implementation as a service -->
+        <service
+            android:name=".BTADMMessageHandlerJobBase"
             android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
-            android:name="com.offlineprogrammer.braintrainer.BTADMMessageReceiver"
+            android:name=".BTADMMessageReceiver"
             android:permission="com.amazon.device.messaging.permission.SEND">
             <intent-filter>
                 <action android:name="com.amazon.device.messaging.intent.REGISTRATION" />
                 <action android:name="com.amazon.device.messaging.intent.RECEIVE" />
-                <category android:name="com.offlineprogrammer.braintrainer"/>
+
+                <category android:name="com.offlineprogrammer.braintrainer" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

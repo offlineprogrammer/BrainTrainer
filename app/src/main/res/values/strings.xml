@@ -9,5 +9,6 @@
 
     <string name="server_address">INSERT_SERVER_ADDRESS_HERE</string>
     <string name="server_port">8080</string>
+    <string name="buyfullversion">Buy Full Version</string>
 
 </resources>
