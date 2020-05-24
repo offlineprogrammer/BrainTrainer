@@ -236,7 +236,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void launchMainActivity(User user) {
         if (user != null) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            startActivity(new Intent(LoginActivity.this, GameActivity.class));
             finish();
         }
     }

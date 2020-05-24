@@ -84,11 +84,6 @@ public class MainActivity extends AppCompatActivity {
     private String currentUserId;
     private String currentMarketplace;
 
-
-    Button goButton;
-
-
-
     int score = 0;
     int numberOfQuestions = 0;
     TextView scoreTextView;
@@ -161,10 +156,15 @@ public class MainActivity extends AppCompatActivity {
         setupAmplify();
         setupUi();
         setupGame();
-
         setupAds();
-        register();
+      //  register();
+        //setupIAP();
 
+        startTheGame();
+
+    }
+
+    private void setupIAP() {
         parentSKU = "com.offlineprogrammer.braintrainer.removeads";
 
         PurchasingService.registerListener(this, purchasingListener);
@@ -187,11 +187,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
-
-
-
-
     }
 
     private void setupAmplify() {
@@ -233,7 +228,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupUi() {
-        goButton = findViewById(R.id.goButton);
         sumTextView = findViewById(R.id.sumTextView);
         scoreTextView = findViewById(R.id.scoreTextView);
         button0 = findViewById(R.id.button0);
@@ -269,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+/*
 //getUserData() will query the Appstore for the Users information
         PurchasingService.getUserData();
 //getPurchaseUpdates() will query the Appstore for any previous purchase
@@ -279,6 +273,8 @@ public class MainActivity extends AppCompatActivity {
         productSkus.add(parentSKU);
         PurchasingService.getProductData(productSkus);
         Log.v("Validating SKUs", "Validating SKUs with Amazon" );
+
+ */
     }
 
     private void setupAds() {
@@ -327,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
         this.adView.loadAd();
     }
 
-    public void start(View view){
+    public void startTheGame(){
         Log.i("goButton Clicked","Hide");
         //goButton.setVisibility(View.INVISIBLE);
         homeLayout.setVisibility(View.INVISIBLE);
@@ -364,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         Log.i("chooseOperation: ", " is" +myGame.getOperation());
-        start(goButton);
+        startTheGame();
 
     }
 

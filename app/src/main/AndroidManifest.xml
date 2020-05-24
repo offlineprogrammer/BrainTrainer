@@ -40,6 +40,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".GameActivity"></activity>
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.Splash" />
