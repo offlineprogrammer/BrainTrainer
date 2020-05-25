@@ -1,6 +1,7 @@
 package com.offlineprogrammer.braintrainer.answer;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.offlineprogrammer.braintrainer.R;
 
 public class AnswerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private static final String TAG = "AnswerViewHolder";
     private TextView answerTextView;
     OnAnswerListener onAnswerListener;
     private Context mContext;
@@ -22,7 +24,8 @@ public class AnswerViewHolder extends RecyclerView.ViewHolder implements View.On
     }
 
     public void bindData(final Answer viewModel) {
-        answerTextView.setText(viewModel.getValue());
+        Log.i(TAG, "bindData: " + viewModel.getValue().toString());
+        answerTextView.setText(viewModel.getValue().toString());
     }
 
     @Override
