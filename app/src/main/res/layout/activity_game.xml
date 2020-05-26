@@ -121,14 +121,42 @@
 
         <ImageButton
             android:id="@+id/goButton"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:scaleType="fitXY"
             android:background="@drawable/play"
             android:gravity="center"
             app:layout_constraintHorizontal_bias="0.5" />
 
 </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/removeAdsCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/startCard"
+        card_view:cardBackgroundColor="@android:color/white"
+        card_view:cardCornerRadius="8dp"
+        card_view:cardElevation="8dp"
+        card_view:cardPreventCornerOverlap="true"
+        card_view:cardUseCompatPadding="true"
+        android:gravity="center_horizontal"
+        card_view:contentPadding="10dp">
+
+        <ImageButton
+            android:id="@+id/removeAdsButton"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitXY"
+            android:background="@drawable/adblock72"
+            android:gravity="center"
+            app:layout_constraintHorizontal_bias="0.5" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+
 
 
     <com.amazon.device.ads.AdLayout
