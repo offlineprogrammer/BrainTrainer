@@ -143,7 +143,8 @@
         card_view:cardPreventCornerOverlap="true"
         card_view:cardUseCompatPadding="true"
         android:gravity="center_horizontal"
-        card_view:contentPadding="10dp">
+        card_view:contentPadding="10dp"
+        android:visibility="gone">
 
         <ImageButton
             android:id="@+id/removeAdsButton"
@@ -152,7 +153,8 @@
             android:scaleType="fitXY"
             android:background="@drawable/adblock72"
             android:gravity="center"
-            app:layout_constraintHorizontal_bias="0.5" />
+            app:layout_constraintHorizontal_bias="0.5"
+            />
 
     </com.google.android.material.card.MaterialCardView>
 

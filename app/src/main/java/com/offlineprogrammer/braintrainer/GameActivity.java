@@ -1,6 +1,7 @@
 package com.offlineprogrammer.braintrainer;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -169,13 +170,7 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
 
         PurchasingService.registerListener(this, purchasingListener);
 
-        ImageButton button =  findViewById(R.id.removeAdsButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PurchasingService.purchase(parentSKU);
-            }
-        });
+
 
         //create a handler for the UI changes
         handler = new Handler(Looper.getMainLooper()) {
@@ -190,6 +185,18 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
                 }
             }
         };
+    }
+
+    private void enableIAP() {
+        CardView removeAdsCard = findViewById(R.id.removeAdsCard);
+        removeAdsCard.setVisibility(View.VISIBLE);
+        ImageButton button =  findViewById(R.id.removeAdsButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PurchasingService.purchase(parentSKU);
+            }
+        });
     }
 
     private void clearAds() {
@@ -304,9 +311,14 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
                     for ( String s : productDataResponse.getUnavailableSkus()) {
                         Log.v("Unavailable SKU:"+s, "Unavailable SKU:" + s);
                     }
+                    enableIAP();
                     break;
                 case FAILED:
                     Log.v("FAILED", "FAILED" );
+                    Log.i(TAG, "onProductDataResponse: Failed");
+                    break ;
+                case NOT_SUPPORTED:
+                    Log.i(TAG, "onProductDataResponse: NOT_SUPPORTED");
                     break ;
             }
         }
