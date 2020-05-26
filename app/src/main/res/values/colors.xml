@@ -12,4 +12,8 @@
     <color name="blue">#0033CC</color>
     <color name="orange">#FF9900</color>
     <color name="gray">#D8D8D8</color>
+    <color name="answer0Color">#F44336</color>
+    <color name="answer1Color">#9C27B0</color>
+    <color name="answer2Color">#3F51B5</color>
+    <color name="answer3Color">#8BC34A</color>
 </resources>

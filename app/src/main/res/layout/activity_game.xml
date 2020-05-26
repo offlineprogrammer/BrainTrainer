@@ -1,117 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".GameActivity">
-<!--<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/timer_question_score_constraintLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/timerCard"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        card_view:cardBackgroundColor="@android:color/white"
-        card_view:cardCornerRadius="8dp"
-        card_view:cardElevation="8dp"
-        card_view:cardPreventCornerOverlap="true"
-        card_view:cardUseCompatPadding="true"
-        card_view:contentPadding="10dp"
-        app:layout_constraintHorizontal_weight="3"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintRight_toLeftOf="@+id/questionCard"
-        app:layout_constraintDimensionRatio="1:1">
-
-    <TextView
-        android:id="@+id/timerTextView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FF9800"
-        android:gravity="center"
-        android:text="30s"
-        android:textSize="18sp"
-        android:textStyle="italic|bold" />
-
-</com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/questionCard"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        card_view:cardBackgroundColor="@android:color/white"
-        card_view:cardCornerRadius="8dp"
-        card_view:cardElevation="8dp"
-        card_view:cardPreventCornerOverlap="true"
-        card_view:cardUseCompatPadding="true"
-        card_view:contentPadding="10dp"
-        app:layout_constraintHorizontal_weight="4"
-        app:layout_constraintTop_toTopOf="@+id/timerCard"
-        app:layout_constraintRight_toLeftOf="@+id/scoreCard"
-        app:layout_constraintLeft_toRightOf="@+id/timerCard"
-        app:layout_constraintDimensionRatio="4:3" >
-
-        <TextView
-            android:id="@+id/questionTextView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="10 + 5"
-            android:textSize="18sp"
-            android:textStyle="italic|bold" />
-
-    </com.google.android.material.card.MaterialCardView>
 
 
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/scoreCard"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        card_view:cardBackgroundColor="@android:color/white"
-        card_view:cardCornerRadius="8dp"
-        card_view:cardElevation="8dp"
-        card_view:cardPreventCornerOverlap="true"
-        card_view:cardUseCompatPadding="true"
-        card_view:contentPadding="10dp"
-        app:layout_constraintHorizontal_weight="3"
-        app:layout_constraintTop_toTopOf="@+id/timerCard"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/questionCard"
-        app:layout_constraintDimensionRatio="1:1" >
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/timerCard"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/questionCard"
+            app:layout_constraintTop_toTopOf="parent"
+            card_view:cardBackgroundColor="@android:color/white"
+            card_view:cardCornerRadius="8dp"
+            card_view:cardElevation="8dp"
+            card_view:cardPreventCornerOverlap="true"
+            card_view:cardUseCompatPadding="true"
+            card_view:contentPadding="10dp">
 
-        <TextView
-            android:id="@+id/scoreTextView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#03A9F4"
-            android:gravity="center"
-            android:text="10/25"
-            android:textSize="18sp"
-            android:textStyle="italic|bold" />
+            <TextView
+                android:id="@+id/timerTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FF9800"
+                android:gravity="center"
+                android:text="30s"
+                android:textSize="40sp"
+                android:textStyle="italic|bold" />
 
-    </com.google.android.material.card.MaterialCardView>
+        </com.google.android.material.card.MaterialCardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>-->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/questionCard"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="4:3"
+            app:layout_constraintHorizontal_weight="4"
+            app:layout_constraintLeft_toRightOf="@+id/timerCard"
+            app:layout_constraintRight_toLeftOf="@+id/scoreCard"
+            app:layout_constraintTop_toTopOf="@+id/timerCard"
+            card_view:cardBackgroundColor="@android:color/white"
+            card_view:cardCornerRadius="8dp"
+            card_view:cardElevation="8dp"
+            card_view:cardPreventCornerOverlap="true"
+            card_view:cardUseCompatPadding="true"
+            card_view:contentPadding="10dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+            <TextView
+                android:id="@+id/questionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="10 + 5"
+                android:textSize="40sp"
+                android:textStyle="italic|bold" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/scoreCard"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintLeft_toRightOf="@+id/questionCard"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/timerCard"
+            card_view:cardBackgroundColor="@android:color/white"
+            card_view:cardCornerRadius="8dp"
+            card_view:cardElevation="8dp"
+            card_view:cardPreventCornerOverlap="true"
+            card_view:cardUseCompatPadding="true"
+            card_view:contentPadding="10dp">
+
+            <TextView
+                android:id="@+id/scoreTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#03A9F4"
+                android:gravity="center"
+                android:text="10/25"
+                android:textSize="40sp"
+                android:textStyle="italic|bold" />
+
+        </com.google.android.material.card.MaterialCardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/answers_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/timerCard" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</RelativeLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
 

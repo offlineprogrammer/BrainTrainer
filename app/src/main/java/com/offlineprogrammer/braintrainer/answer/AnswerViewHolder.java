@@ -12,7 +12,7 @@ import com.offlineprogrammer.braintrainer.R;
 
 public class AnswerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private static final String TAG = "AnswerViewHolder";
-    private TextView answerTextView;
+    TextView answerTextView;
     OnAnswerListener onAnswerListener;
     private Context mContext;
     public AnswerViewHolder(@NonNull View itemView, OnAnswerListener onAnswerListener) {

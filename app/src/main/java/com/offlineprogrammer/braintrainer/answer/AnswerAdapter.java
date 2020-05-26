@@ -1,5 +1,7 @@
 package com.offlineprogrammer.braintrainer.answer;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +17,13 @@ import java.util.ArrayList;
 public class AnswerAdapter extends RecyclerView.Adapter {
     private ArrayList<Answer> models = new ArrayList<>();
     private OnAnswerListener mOnAnswerListener;
-    private static final String TAG = "KidAdapter";
+    private static final String TAG = "AnswerAdapter";
+    private Context mContext;
 
-    public AnswerAdapter(@NonNull final ArrayList<Answer> viewModels, OnAnswerListener onAnswerListener) {
+    public AnswerAdapter(Context mContext, @NonNull final ArrayList<Answer> viewModels, OnAnswerListener onAnswerListener) {
         this.models.addAll(viewModels);
         this.mOnAnswerListener =onAnswerListener;
+        this.mContext = mContext;
     }
 
     @NonNull
@@ -32,6 +36,21 @@ public class AnswerAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((AnswerViewHolder) holder).bindData(models.get(position));
+        switch (position){
+            case 0:
+                ((AnswerViewHolder) holder).answerTextView.setBackgroundColor(mContext.getResources().getColor(R.color.answer0Color));
+                break;
+            case 1:
+                ((AnswerViewHolder) holder).answerTextView.setBackgroundColor(mContext.getResources().getColor(R.color.answer1Color));
+                break;
+            case 2:
+                ((AnswerViewHolder) holder).answerTextView.setBackgroundColor(mContext.getResources().getColor(R.color.answer2Color));
+                break;
+            case 3:
+                ((AnswerViewHolder) holder).answerTextView.setBackgroundColor(mContext.getResources().getColor(R.color.answer3Color));
+                break;
+
+        }
 
     }
 

@@ -49,7 +49,7 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
                 new Answer(10),
                 new Answer(10));
         Log.i(TAG, "prepareData: Size " + mAnswerList.size());
-        myAdapter = new AnswerAdapter(mAnswerList,this);
+        myAdapter = new AnswerAdapter(GameActivity.this, mAnswerList,this);
         mRecyclerView.setAdapter(myAdapter);
 
     }
