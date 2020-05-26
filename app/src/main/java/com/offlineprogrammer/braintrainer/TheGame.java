@@ -10,6 +10,8 @@ public class TheGame {
     public int locationOfCorrectAnswer;
     public  int a;
     public  int b;
+    private int score;
+    private int numberOfQuestions;
     ArrayList<Integer> answers = new ArrayList<Integer>();
 
     public TheGame(String sOperation) {
@@ -98,5 +100,29 @@ public class TheGame {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getNumberOfQuestions() {
+        return numberOfQuestions;
+    }
+
+    public void setNumberOfQuestions(int numberOfQuestions) {
+        this.numberOfQuestions = numberOfQuestions;
+    }
+
+    public void incrementScore() {
+        this.score++;
+    }
+
+    public void incrementNumberOfQuestions() {
+        this.numberOfQuestions++;
     }
 }

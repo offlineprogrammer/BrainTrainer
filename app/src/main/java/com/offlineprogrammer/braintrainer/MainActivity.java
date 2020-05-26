@@ -3,14 +3,12 @@ package com.offlineprogrammer.braintrainer;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -19,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amazon.device.ads.AdLayout;
 import com.amazon.device.ads.AdRegistration;
@@ -33,30 +30,14 @@ import com.amazon.device.iap.model.PurchaseUpdatesResponse;
 import com.amazon.device.iap.model.Receipt;
 import com.amazon.device.iap.model.UserDataResponse;
 import com.amazon.device.messaging.ADM;
-import com.amazon.identity.auth.device.AuthError;
-import com.amazon.identity.auth.device.api.Listener;
-import com.amazon.identity.auth.device.api.authorization.AuthCancellation;
-import com.amazon.identity.auth.device.api.authorization.AuthorizationManager;
-import com.amazon.identity.auth.device.api.authorization.AuthorizeListener;
-import com.amazon.identity.auth.device.api.authorization.AuthorizeRequest;
-import com.amazon.identity.auth.device.api.authorization.AuthorizeResult;
-import com.amazon.identity.auth.device.api.authorization.ProfileScope;
-import com.amazon.identity.auth.device.api.authorization.Scope;
-import com.amazon.identity.auth.device.api.authorization.User;
-import com.amazon.identity.auth.device.api.workflow.RequestContext;
-
 
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import com.amazonaws.mobileconnectors.pinpoint.analytics.AnalyticsEvent;
 import com.amplifyframework.AmplifyException;
 import com.amplifyframework.analytics.AnalyticsException;
 import com.amplifyframework.core.Amplify;
@@ -67,13 +48,6 @@ import com.amazonaws.mobile.client.Callback;
 import com.amazonaws.mobile.client.UserStateDetails;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobile.client.AWSMobileClient;
-
-import com.amplifyframework.core.Amplify;
-import com.amplifyframework.analytics.AnalyticsException;
-import com.amplifyframework.analytics.BasicAnalyticsEvent;
-import com.amplifyframework.analytics.pinpoint.PinpointProperties;
-
-
 
 
 public class MainActivity extends AppCompatActivity {

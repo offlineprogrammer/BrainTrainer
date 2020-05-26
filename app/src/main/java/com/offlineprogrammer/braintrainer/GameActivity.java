@@ -4,14 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.amazon.device.ads.AdLayout;
 import com.amazon.device.ads.AdRegistration;
@@ -32,7 +35,6 @@ import com.offlineprogrammer.braintrainer.answer.OnAnswerListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,6 +53,14 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
     //Define UserId and MarketPlace
     private String currentUserId;
     private String currentMarketplace;
+    private TheGame myGame;
+    ImageButton goButton;
+    TextView timerTextView;
+    TextView questionTextView;
+    TextView scoreTextView;
+    CountDownTimer countDownTimer = null;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +77,76 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
         prepareData();
         setupAds();
         setupIAP();
+
+        goButton = findViewById(R.id.goButton);
+        goButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (myGame == null || !myGame.isActive()) {
+                    playTheGame();
+                }
+            }
+        });
+
+        timerTextView = findViewById(R.id.timerTextView);
+        questionTextView = findViewById(R.id.questionTextView);
+        scoreTextView = findViewById(R.id.scoreTextView);
+
+    }
+
+    private void playTheGame() {
+        myGame = new TheGame("+");
+        myGame.setNumberOfQuestions(0);
+        myGame.setScore(0);
+        timerTextView.setText("30s");
+        scoreTextView.setText(Integer.toString(myGame.getScore()) + "/" + Integer.toString(myGame.getNumberOfQuestions()));
+        newQuestion();
+        myGame.setActive(true);
+        goButton.setImageResource(R.drawable.question);
+
+
+        if(countDownTimer  != null){
+            countDownTimer.cancel();
+        }
+        countDownTimer =  new CountDownTimer(30100,1000){
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                timerTextView.setText(String.valueOf(millisUntilFinished/1000)+"s");
+
+            }
+
+            @Override
+            public void onFinish() {
+
+                goButton.setImageResource(R.drawable.playagain);
+                myGame.setActive(false);
+
+
+            }
+        }.start();
+
+    }
+
+    private void newQuestion() {
+
+        updateAnswers(myGame.setupGame());
+        questionTextView.setText(String.format("%s %s %s", Integer.toString(myGame.a), myGame.getOperation() , Integer.toString(myGame.b)));
+
+
+    }
+
+    private void updateAnswers(ArrayList<Integer> setupGame) {
+        mAnswerList.clear();
+
+        Collections.addAll(mAnswerList,
+                new Answer(setupGame.get(0)),
+                new Answer(setupGame.get(1)),
+                new Answer(setupGame.get(2)),
+                new Answer(setupGame.get(3)));
+        Log.i(TAG, "prepareData: Size " + mAnswerList.size());
+        myAdapter.updateData(mAnswerList);
 
     }
 
@@ -148,6 +228,27 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
 
     @Override
     public void onAnswerClick(int position) {
+        if (!myGame.isActive()){
+            return;
+        }
+        Log.i("Selected button","is " + position);
+
+
+        if (position == myGame.locationOfCorrectAnswer){
+            goButton.setImageResource(R.drawable.correct);
+            int score = myGame.getScore();
+            myGame.incrementScore();
+            Log.i(TAG, "onAnswerClick: myGame " + myGame.getScore());
+
+        } else {
+            goButton.setImageResource(R.drawable.wrong);
+
+
+        }
+        myGame.incrementNumberOfQuestions();
+        scoreTextView.setText(Integer.toString(myGame.getScore()) + "/" + Integer.toString(myGame.getNumberOfQuestions()));
+        Log.i(TAG, "onAnswerClick: scoreTextView " + scoreTextView.getText());
+        newQuestion();
 
     }
 
