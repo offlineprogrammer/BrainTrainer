@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressBar mLogInProgress;
     String parentSKU;
+
     Handler handler;
 
 

@@ -91,7 +91,9 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
 
         timerTextView = findViewById(R.id.timerTextView);
         questionTextView = findViewById(R.id.questionTextView);
+        questionTextView.setText("??");
         scoreTextView = findViewById(R.id.scoreTextView);
+        scoreTextView.setText("??");
 
     }
 
@@ -120,6 +122,7 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
 
             @Override
             public void onFinish() {
+                timerTextView.setText("0s");
 
                 goButton.setImageResource(R.drawable.playagain);
                 myGame.setActive(false);
@@ -155,10 +158,10 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
         mAnswerList = new ArrayList<>(4);
 
         Collections.addAll(mAnswerList,
-                new Answer(10),
-                new Answer(10),
-                new Answer(10),
-                new Answer(10));
+                new Answer(0),
+                new Answer(0),
+                new Answer(0),
+                new Answer(0));
         Log.i(TAG, "prepareData: Size " + mAnswerList.size());
         myAdapter = new AnswerAdapter(GameActivity.this, mAnswerList,this);
         mRecyclerView.setAdapter(myAdapter);
@@ -180,11 +183,24 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
                     //button.setText("complete");
                     Log.i(TAG, "handleMessage: Complete");
                     clearAds();
+                    disableIAP();
 
 
                 }
             }
         };
+    }
+
+    private void disableIAP() {
+        CardView removeAdsCard = findViewById(R.id.removeAdsCard);
+        removeAdsCard.setVisibility(View.GONE);
+        ImageButton button =  findViewById(R.id.removeAdsButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PurchasingService.purchase(parentSKU);
+            }
+        });
     }
 
     private void enableIAP() {
@@ -262,19 +278,14 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
     @Override
     protected void onResume() {
         super.onResume();
-
-//getUserData() will query the Appstore for the Users information
-        PurchasingService.getUserData();
-//getPurchaseUpdates() will query the Appstore for any previous purchase
-        PurchasingService.getPurchaseUpdates(true);
-//getProductData will validate the SKUs with Amazon Appstore
+        //getProductData will validate the SKUs with Amazon Appstore
         final Set<String> productSkus = new HashSet<String>();
         productSkus.add(parentSKU);
         PurchasingService.getProductData(productSkus);
-
-        Log.v("Validating SKUs", "Validating SKUs with Amazon" );
-
-
+        //getUserData() will query the Appstore for the Users information
+        PurchasingService.getUserData();
+        //getPurchaseUpdates() will query the Appstore for any previous purchase
+        PurchasingService.getPurchaseUpdates(true);
     }
 
 

@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.amazon.identity.auth.device.AuthError;
@@ -28,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     ImageButton login_with_amazon;
     private RequestContext requestContext;
     private boolean mIsLoggedIn;
+    private ProgressBar mLogInProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         setupAuthorization();
 
         login_with_amazon = findViewById(R.id.login_with_amazon);
+        mLogInProgress = findViewById(R.id.log_in_progress);
 
         login_with_amazon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +133,7 @@ public class LoginActivity extends AppCompatActivity {
     private void setLoggingInState(final boolean loggingIn) {
         if (loggingIn) {
             Log.d(TAG, "Showing the progress bar");
-           // mLogInProgress.setVisibility(View.VISIBLE);
+            mLogInProgress.setVisibility(View.VISIBLE);
             // mProfileText.setVisibility(TextView.GONE);
         } else {
             // mProfileText.setVisibility(TextView.VISIBLE);
@@ -158,6 +161,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(AuthorizeResult result) {
                 if (result.getAccessToken() != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setLoggingInState(true);
+                            //  setLoggedInState();
+                        }
+                    });
+
                     /* The user is signed in */
                     Log.i(TAG,"result.getAccessToken()");
                     fetchUserProfile();
