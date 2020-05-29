@@ -299,6 +299,7 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
                 case SUCCESSFUL:
                     currentUserId = response.getUserData().getUserId();
                     currentMarketplace = response.getUserData().getMarketplace();
+                    Log.i(TAG, String.format(" userId : %s\n MarketPlace: %s\n", currentUserId, currentMarketplace));
                     break;
                 case FAILED:
                 case NOT_SUPPORTED:
