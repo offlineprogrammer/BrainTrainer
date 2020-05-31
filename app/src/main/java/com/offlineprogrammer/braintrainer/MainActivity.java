@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupGame(){
-        myGame = new TheGame("+");
+       // myGame = new TheGame("+", gameTimer);
         recordEvent("New Game " + myGame.getOperation());
     }
 

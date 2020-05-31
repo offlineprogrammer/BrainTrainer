@@ -5,8 +5,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
+
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -38,6 +37,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class GameActivity extends AppCompatActivity implements OnAnswerListener {
     private static final String TAG = "GameActivity";
@@ -49,7 +49,9 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
     private AdLayout adView; // The ad view used to load and display the ad.
     private static final String APP_KEY = "3967f616abb34b3c9f83c8d4c86eec34"; // Sample Application Key. Replace this value with your Application Key.
     private static final int INITIALIZATION_TIMEOUT_MS = 2000;
-    String parentSKU;
+
+    String removeAdsSKU = "com.offlineprogrammer.braintrainer.removeads";
+    String add10sSKU= "com.offlineprogrammer.braintrainer.add10s";
     Handler handler;
     //Define UserId and MarketPlace
     private String currentUserId;
@@ -60,6 +62,7 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
     TextView questionTextView;
     TextView scoreTextView;
     CountDownTimer countDownTimer = null;
+    int gameTimer = 30;
 
 
 
@@ -98,11 +101,13 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
     }
 
     private void playTheGame() {
-        myGame = new TheGame("+");
+        myGame = new TheGame("+", gameTimer);
         myGame.setNumberOfQuestions(0);
+
         myGame.setScore(0);
-        timerTextView.setText("30s");
-        scoreTextView.setText(Integer.toString(myGame.getScore()) + "/" + Integer.toString(myGame.getNumberOfQuestions()));
+        long gameMillSeconds = TimeUnit.SECONDS.toMillis(myGame.getTimer());
+        timerTextView.setText(String.format("%ds", myGame.getTimer()));
+        scoreTextView.setText(String.format("%s/%s", Integer.toString(myGame.getScore()), Integer.toString(myGame.getNumberOfQuestions())));
         newQuestion();
         myGame.setActive(true);
         goButton.setImageResource(R.drawable.question);
@@ -111,7 +116,7 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
         if(countDownTimer  != null){
             countDownTimer.cancel();
         }
-        countDownTimer =  new CountDownTimer(30100,1000){
+        countDownTimer =  new CountDownTimer(gameMillSeconds+100,1000){
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -169,7 +174,7 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
     }
 
     private void setupIAP() {
-        parentSKU = "com.offlineprogrammer.braintrainer.removeads";
+
 
         PurchasingService.registerListener(this, purchasingListener);
 
@@ -179,11 +184,11 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
-                if (msg.obj.equals("RemoveAds")) {
+                if (msg.obj.equals(removeAdsSKU)) {
                     //button.setText("complete");
-                    Log.i(TAG, "handleMessage: Complete");
+                    Log.i(TAG, "handleMessage removeAdsSKU: Complete");
                     clearAds();
-                    disableIAP();
+                    configureIAPOptions(R.id.removeAdsCard, View.GONE, R.id.removeAdsButton, removeAdsSKU);
 
 
                 }
@@ -192,27 +197,31 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
     }
 
     private void disableIAP() {
-        CardView removeAdsCard = findViewById(R.id.removeAdsCard);
-        removeAdsCard.setVisibility(View.GONE);
-        ImageButton button =  findViewById(R.id.removeAdsButton);
+        configureIAPOptions(R.id.removeAdsCard, View.GONE, R.id.removeAdsButton, removeAdsSKU);
+
+        configureIAPOptions(R.id.add10sCard, View.GONE, R.id.removeAdsButton, add10sSKU);
+
+
+    }
+
+    private void configureIAPOptions(int p, int gone, int p2, String iapSKU) {
+        CardView iapCard = findViewById(p);
+        iapCard.setVisibility(gone);
+        ImageButton button = findViewById(p2);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PurchasingService.purchase(parentSKU);
+                PurchasingService.purchase(iapSKU);
             }
         });
     }
 
     private void enableIAP() {
-        CardView removeAdsCard = findViewById(R.id.removeAdsCard);
-        removeAdsCard.setVisibility(View.VISIBLE);
-        ImageButton button =  findViewById(R.id.removeAdsButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PurchasingService.purchase(parentSKU);
-            }
-        });
+        configureIAPOptions(R.id.removeAdsCard, View.VISIBLE, R.id.removeAdsButton, removeAdsSKU);
+
+        configureIAPOptions(R.id.add10sCard, View.VISIBLE, R.id.add10sButton, add10sSKU);
+
+
     }
 
     private void clearAds() {
@@ -280,12 +289,15 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
         super.onResume();
         //getProductData will validate the SKUs with Amazon Appstore
         final Set<String> productSkus = new HashSet<String>();
-        productSkus.add(parentSKU);
+        productSkus.add(removeAdsSKU);
+        productSkus.add(add10sSKU);
         PurchasingService.getProductData(productSkus);
         //getUserData() will query the Appstore for the Users information
         PurchasingService.getUserData();
         //getPurchaseUpdates() will query the Appstore for any previous purchase
+        Log.i(TAG, "onResume: Calling getPurchaseUpdates");
         PurchasingService.getPurchaseUpdates(true);
+
     }
 
 
@@ -316,17 +328,17 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
                     final Map<String, Product> products = productDataResponse.getProductData();
                     for ( String key : products.keySet()) {
                         Product product = products.get(key);
-                        Log.v("Product:", String.format( "Product: %s\n Type: %s\n SKU: %s\n Price: %s\n Description: %s\n" , product.getTitle(), product.getProductType(),
+                        Log.i(TAG, String.format( "Product: %s\n Type: %s\n SKU: %s\n Price: %s\n Description: %s\n" , product.getTitle(), product.getProductType(),
                                 product.getSku(), product.getPrice(), product.getDescription()));
                     }
                     //get all unavailable SKUs
                     for ( String s : productDataResponse.getUnavailableSkus()) {
-                        Log.v("Unavailable SKU:"+s, "Unavailable SKU:" + s);
+                        Log.i(TAG, "Unavailable SKU:" + s);
                     }
                     enableIAP();
                     break;
                 case FAILED:
-                    Log.v("FAILED", "FAILED" );
+                    
                     Log.i(TAG, "onProductDataResponse: Failed");
                     break ;
                 case NOT_SUPPORTED:
@@ -338,6 +350,13 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
         public void onPurchaseResponse(PurchaseResponse purchaseResponse) {
             switch (purchaseResponse.getRequestStatus()) {
                 case SUCCESSFUL:
+                    Receipt receipt = purchaseResponse.getReceipt();
+                    Log.i(TAG, "onPurchaseResponse: SKU is "+ receipt.getSku());
+                    if (receipt.getSku().equals(add10sSKU)) {
+                    gameTimer = gameTimer+10;
+                        timerTextView.setText(String.format("%ds", gameTimer));
+
+                }
                     PurchasingService.notifyFulfillment(purchaseResponse.getReceipt().getReceiptId(),
                             FulfillmentResult.FULFILLED);
                     break ;
@@ -350,20 +369,28 @@ public class GameActivity extends AppCompatActivity implements OnAnswerListener 
             // Process receipts
             switch (response.getRequestStatus()) {
                 case SUCCESSFUL:
+                    Log.i(TAG, "onPurchaseUpdatesResponse: response.getReceipts() is "+ response.getReceipts().size() );
                     for ( final Receipt receipt : response.getReceipts()) {
+
                         // Process receipts
                         if (!receipt.isCanceled()){
+                            Log.i(TAG, "onPurchaseUpdatesResponse: SKU is " + receipt.getSku());
                             Message m= new Message();
-                            m.obj="RemoveAds";
+                            m.obj=receipt.getSku();//"RemoveAds";
                             handler.handleMessage(m);
+                        } else {
+                            Log.i(TAG, "onPurchaseUpdatesResponse: cancelled SKU " + receipt.getSku());
                         }
+
+
                     }
                     if (response.hasMore()) {
+                        Log.i(TAG, "onPurchaseUpdatesResponse: has more");
                         PurchasingService.getPurchaseUpdates(true);
                     }
                     break ;
                 case FAILED:
-                    Log.d("FAILED","FAILED");
+                    Log.i(TAG, "onPurchaseUpdatesResponse: Failed");
                     break ;
             }
 

@@ -11,11 +11,13 @@ public class TheGame {
     public  int a;
     public  int b;
     private int score;
+    private int timer;
     private int numberOfQuestions;
     ArrayList<Integer> answers = new ArrayList<Integer>();
 
-    public TheGame(String sOperation) {
+    public TheGame(String sOperation, int gameTimer) {
         mOperation=sOperation;
+        timer=gameTimer;
     }
 
     public  int doMath(int a, int b){
@@ -100,6 +102,14 @@ public class TheGame {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public int getTimer() {
+        return timer;
+    }
+
+    public void setTimer(int timer) {
+        this.timer = timer;
     }
 
     public int getScore() {
